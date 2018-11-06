@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>435</width>
-    <height>453</height>
+    <width>799</width>
+    <height>539</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QPushButton" name="pushButton_8">
+       <widget class="QPushButton" name="penButton">
         <property name="minimumSize">
          <size>
           <width>41</width>
@@ -32,7 +32,7 @@
          </size>
         </property>
         <property name="text">
-         <string>PushButton</string>
+         <string>Draw</string>
         </property>
        </widget>
       </item>
@@ -51,7 +51,7 @@
          </size>
         </property>
         <property name="text">
-         <string>PushButton</string>
+         <string>Eraser</string>
         </property>
        </widget>
       </item>
@@ -70,7 +70,7 @@
          </size>
         </property>
         <property name="text">
-         <string>PushButton</string>
+         <string>Dropper</string>
         </property>
        </widget>
       </item>
@@ -89,7 +89,7 @@
          </size>
         </property>
         <property name="text">
-         <string>PushButton</string>
+         <string>Mirror Tool</string>
         </property>
        </widget>
       </item>
@@ -108,7 +108,7 @@
          </size>
         </property>
         <property name="text">
-         <string>PushButton</string>
+         <string>Duplicate</string>
         </property>
        </widget>
       </item>
@@ -127,12 +127,12 @@
          </size>
         </property>
         <property name="text">
-         <string>PushButton</string>
+         <string>Undo</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_11">
+       <widget class="QPushButton" name="pushButton_2">
         <property name="minimumSize">
          <size>
           <width>41</width>
@@ -146,7 +146,32 @@
          </size>
         </property>
         <property name="text">
-         <string>PushButton</string>
+         <string>Add Frame</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>41</width>
+          <height>41</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>41</width>
+          <height>41</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>COLOr</string>
         </property>
        </widget>
       </item>
@@ -166,67 +191,47 @@
      </layout>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QLabel" name="label_2">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize">
        <size>
-        <width>251</width>
-        <height>321</height>
+        <width>300</width>
+        <height>300</height>
        </size>
       </property>
       <property name="text">
-       <string>PushButton</string>
+       <string/>
       </property>
      </widget>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QVBoxLayout" name="animationDisplayLayout">
       <item>
-       <widget class="QLCDNumber" name="lcdNumber_2">
-        <property name="maximumSize">
-         <size>
-          <width>64</width>
-          <height>16777215</height>
-         </size>
+       <widget class="QLabel" name="label">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLCDNumber" name="lcdNumber">
-        <property name="maximumSize">
-         <size>
-          <width>64</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLCDNumber" name="lcdNumber_3">
-        <property name="maximumSize">
-         <size>
-          <width>64</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLCDNumber" name="lcdNumber_5"/>
-      </item>
-      <item>
-       <widget class="QLCDNumber" name="lcdNumber_4">
-        <property name="maximumSize">
-         <size>
-          <width>64</width>
-          <height>16777215</height>
-         </size>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>TextLabel</string>
         </property>
        </widget>
       </item>
      </layout>
     </item>
     <item>
-     <widget class="QSlider" name="verticalSlider">
+     <widget class="QSlider" name="animationSlider">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -239,10 +244,20 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>435</width>
+     <width>799</width>
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionSave_As"/>
+    <addaction name="actionLoad_Sprite"/>
+    <addaction name="actionExport_to_GIF"/>
+    <addaction name="actionPreview_Gif_Animation"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -253,6 +268,26 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionSave_As">
+   <property name="text">
+    <string>Save As</string>
+   </property>
+  </action>
+  <action name="actionLoad_Sprite">
+   <property name="text">
+    <string>Load Sprite</string>
+   </property>
+  </action>
+  <action name="actionExport_to_GIF">
+   <property name="text">
+    <string>Export to GIF</string>
+   </property>
+  </action>
+  <action name="actionPreview_Gif_Animation">
+   <property name="text">
+    <string>Preview Gif Animation</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
