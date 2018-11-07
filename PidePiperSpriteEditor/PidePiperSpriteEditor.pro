@@ -27,15 +27,11 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    spriteframe.cpp \
-    pixel.cpp \
-    model.cpp
+    drawingwindow.cpp
 
 HEADERS += \
         mainwindow.h \
-    spriteframe.h \
-    pixel.h \
-    model.h
+    drawingwindow.h
 
 FORMS += \
         mainwindow.ui
