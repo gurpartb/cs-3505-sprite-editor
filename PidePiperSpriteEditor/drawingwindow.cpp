@@ -11,13 +11,14 @@ DrawingWindow::DrawingWindow(QWidget* parent) : QLabel(parent)
 
 DrawingWindow::~DrawingWindow()
 {
-
+    
 }
 
 void DrawingWindow::userChoseSize(int size)
 {
     pixMap->fill(Qt::white);
     setPixmap(*pixMap);
+    emit createdInitialFrame();
 
     if (!sizeHasBeenChosen)
     {
@@ -66,6 +67,9 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
         std::cout << "releasin" << std::endl;
         QPoint pos = event->pos();
         findPixelRatio(pos.x(), pos.y());
+
+        emit updatePixmap(*pixMap); //Save the previous Pixmap so we can undo.
+
         drawPixel();
         currentlyDrawing = false;
     }

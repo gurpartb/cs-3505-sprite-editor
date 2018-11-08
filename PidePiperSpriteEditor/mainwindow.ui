@@ -284,8 +284,17 @@
     </item>
     <item>
      <widget class="QSlider" name="animationSlider">
+      <property name="maximum">
+       <number>1</number>
+      </property>
+      <property name="pageStep">
+       <number>1</number>
+      </property>
       <property name="orientation">
        <enum>Qt::Vertical</enum>
+      </property>
+      <property name="invertedAppearance">
+       <bool>true</bool>
       </property>
      </widget>
     </item>

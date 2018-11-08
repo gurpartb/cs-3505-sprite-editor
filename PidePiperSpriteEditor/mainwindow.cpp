@@ -1,10 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
+MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //connect(this, &MainWindow::userChoseSize, window, &DrawingWindow::userChoseSize);
+    connect(ui->drawingWindowLabel, &DrawingWindow::updatePixmap, model, &Model::currentFrameUpdatePixmap);
+    connect(ui->drawingWindowLabel, &DrawingWindow::createdInitialFrame, model, &Model::createNewFrame);
+    connect(ui->addFrameButton, &QPushButton::pressed, model, &Model::updateCurrentFrameCounter);
+    connect(ui->addFrameButton, &QPushButton::pressed, model, &Model::createNewFrame);
+    connect(this, &MainWindow::resetAll, model, &Model::resetAll);
 }
 
 MainWindow::~MainWindow()
@@ -26,14 +30,17 @@ void MainWindow::on_fileNew_triggered()
     if (msgBox.clickedButton()==smallSize)
     {
         ui->drawingWindowLabel->userChoseSize(8);
+        emit resetAll();
     }
     else if (msgBox.clickedButton() == mediumSize)
     {
         ui->drawingWindowLabel->userChoseSize(16);
+        emit resetAll();
     }
     else if (msgBox.clickedButton() == largeSize)
     {
         ui->drawingWindowLabel->userChoseSize(32);
+        emit resetAll();
     }
 }
 
@@ -41,3 +48,13 @@ void MainWindow::on_colorSelectButton_clicked()
 {
 
 }
+
+
+///
+/// \brief MainWindow::on_addFrameButton_clicked
+///
+void MainWindow::on_addFrameButton_clicked()
+{
+
+}
+
