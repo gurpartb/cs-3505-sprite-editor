@@ -23,7 +23,6 @@ void Model::createNewFrame()
     Frame *newFrame = new Frame();
     framesVector.push_back(newFrame);
     emit frameAdded();
-    std::cout << "helaiogej" << std::endl;
 }
 
 ///

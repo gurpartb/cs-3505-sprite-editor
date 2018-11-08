@@ -37,6 +37,7 @@ void DrawingWindow::userChoseSize(int size)
 void DrawingWindow::frameAdded()
 {
     pixMap->fill(Qt::white);
+
     setPixmap(*pixMap);
 }
 
