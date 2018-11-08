@@ -8,6 +8,8 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(ui->drawingWindowLabel, &DrawingWindow::createdInitialFrame, model, &Model::createNewFrame);
     connect(ui->addFrameButton, &QPushButton::pressed, model, &Model::updateCurrentFrameCounter);
     connect(ui->addFrameButton, &QPushButton::pressed, model, &Model::createNewFrame);
+    connect(ui->undoButton, &QPushButton::pressed, model, &Model::undo);
+    connect(model, &Model::undoSignal, ui->drawingWindowLabel, &DrawingWindow::undo);
     connect(this, &MainWindow::resetAll, model, &Model::resetAll);
     connect(model, &Model::frameAdded, ui->drawingWindowLabel, &DrawingWindow::frameAdded);
     connect(ui->drawingWindowLabel, &DrawingWindow::addFrameToUi, this, &MainWindow::addFrameToUi);

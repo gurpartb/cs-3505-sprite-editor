@@ -17,8 +17,10 @@ public slots:
     void createNewFrame();
     void updateCurrentFrameCounter();
     void resetAll();
+    void undo();
 signals:
     void frameAdded();
+    void undoSignal(QPixmap*);
 
 private:
     unsigned int currentFrame;
