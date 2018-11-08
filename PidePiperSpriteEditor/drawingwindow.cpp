@@ -3,6 +3,7 @@
 DrawingWindow::DrawingWindow(QWidget* parent) : QLabel(parent)
 {
     pixelSize = 50;
+    frameCount = 0;
     sizeHasBeenChosen = false;
     pixMap = new QPixmap(800, 800);
     pixMap->fill(Qt::white);
@@ -37,8 +38,9 @@ void DrawingWindow::userChoseSize(int size)
 void DrawingWindow::frameAdded()
 {
     pixMap->fill(Qt::white);
-
+    frameCount++;
     setPixmap(*pixMap);
+    emit addFrameToUi(*pixMap, frameCount);
 }
 
 void DrawingWindow::mousePressEvent(QMouseEvent* event)

@@ -274,8 +274,8 @@ background-color: white;</string>
         </property>
         <property name="minimumSize">
          <size>
-          <width>150</width>
-          <height>150</height>
+          <width>10</width>
+          <height>10</height>
          </size>
         </property>
         <property name="maximumSize">

@@ -10,6 +10,7 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(ui->addFrameButton, &QPushButton::pressed, model, &Model::createNewFrame);
     connect(this, &MainWindow::resetAll, model, &Model::resetAll);
     connect(model, &Model::frameAdded, ui->drawingWindowLabel, &DrawingWindow::frameAdded);
+    connect(ui->drawingWindowLabel, &DrawingWindow::addFrameToUi, this, &MainWindow::addFrameToUi);
 }
 
 MainWindow::~MainWindow()
@@ -43,6 +44,12 @@ void MainWindow::on_fileNew_triggered()
         emit resetAll();
         ui->drawingWindowLabel->userChoseSize(32);
     }
+
+}
+
+void MainWindow::addFrameToUi(QPixmap pixmap, int frameCount)
+{
+    //std::string labelName = "frame";
 
 }
 

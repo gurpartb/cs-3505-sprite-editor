@@ -25,8 +25,8 @@ signals:
     void resetAll();
 
 private slots:
+    void addFrameToUi(QPixmap, int);
     void on_fileNew_triggered();
-
     void on_colorSelectButton_clicked();
 
 private:

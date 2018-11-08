@@ -25,6 +25,7 @@ signals:
     void clicked();
     void updatePixmap(QPixmap*);
     void createdInitialFrame();
+    void addFrameToUi(QPixmap, int);
 
 public slots:
     void frameAdded();
@@ -40,6 +41,7 @@ private:
 
     bool currentlyDrawing;
     int pixelSize; //This is a field for the size of the window.
+    int frameCount;
     const int windowSize = 800;
     bool sizeHasBeenChosen; //This is a test to check if the user has inputed size of the window before drawing.
     double currentPixelX;
