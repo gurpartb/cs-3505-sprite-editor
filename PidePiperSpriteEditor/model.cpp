@@ -7,19 +7,19 @@ Model::Model()
 
 }
 
-void Model::currentFrameUpdatePixmap(QPixmap pixmap)
+void Model::currentFrameUpdatePixmap(QPixmap *pixmap)
 {
 
-    std::cout << "titdyd" << std::endl;
-    framesVector[currentFrame].addNewPixmap(pixmap);
-    std::cout << "222222222222" << std::endl;
+    std::cout << "UPDATING framesVector" << std::endl;
+    framesVector[currentFrame]->addNewPixmap(pixmap);
+    std::cout << "updated framesVector" << std::endl;
 
 }
 
 void Model::createNewFrame()
 {
 
-    Frame newFrame;
+    Frame *newFrame = new Frame();
     framesVector.push_back(newFrame);
 
 }

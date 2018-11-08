@@ -1,7 +1,7 @@
 #include "frame.h"
 
 
-Frame::Frame()
+Frame::Frame() : pixmapVector()
 {
 
 }
@@ -10,12 +10,21 @@ Frame::Frame()
 /// \brief Frame::addNewPixmap
 /// \param pixmap
 ///
-void Frame::addNewPixmap(QPixmap pixmap)
+void Frame::addNewPixmap(QPixmap *pixmap)
 {
 
-    std::cout << "ASS" << std::endl;
-    QPixmap savePixmap = pixmap.copy();
-    pixmapVector.push_back(savePixmap);
-    std::cout << "FUCK" << std::endl;
+    std::cout << "Checking pixmap in framesvector" << std::endl;
+    if (!pixmap)
+    {
+        std::cout << "No Pixmap" << std::endl;
+    }
+    else
+    {
+        std::cout << "Adding to pixmap:" << std::endl;
+        QPixmap *savePixmap = new QPixmap(*pixmap);
+        std::cout << "COPIED PIXMAP" << std::endl;
+        pixmapVector.push_back(savePixmap);
+        std::cout << "added to pixmap vector" << std::endl;
+    }
 
 }

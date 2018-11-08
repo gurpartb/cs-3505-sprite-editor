@@ -68,7 +68,7 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
         QPoint pos = event->pos();
         findPixelRatio(pos.x(), pos.y());
 
-        emit updatePixmap(*pixMap); //Save the previous Pixmap so we can undo.
+        emit updatePixmap(pixMap); //Save the previous Pixmap so we can undo.
 
         drawPixel();
         currentlyDrawing = false;

@@ -9,11 +9,11 @@
 class Frame
 {
     //Fields
-    std::vector<QPixmap> pixmapVector;
+    std::vector<QPixmap*> pixmapVector;
 
 public:
     Frame();
-    void addNewPixmap(QPixmap pixmap);
+    void addNewPixmap(QPixmap *pixmap);
 
 };
 

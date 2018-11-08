@@ -10,10 +10,10 @@ class Model : public QObject
 
 public:
     Model();
-    std::vector<Frame> framesVector;
+    std::vector<Frame*> framesVector;
 
 public slots:
-    void currentFrameUpdatePixmap(QPixmap);
+    void currentFrameUpdatePixmap(QPixmap*);
     void createNewFrame();
     void updateCurrentFrameCounter();
     void resetAll();

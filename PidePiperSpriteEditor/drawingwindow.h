@@ -23,7 +23,7 @@ public:
 
 signals:
     void clicked();
-    void updatePixmap(QPixmap);
+    void updatePixmap(QPixmap*);
     void createdInitialFrame();
 
 public slots:
