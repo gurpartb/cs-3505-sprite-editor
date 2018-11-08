@@ -17,6 +17,8 @@ public slots:
     void createNewFrame();
     void updateCurrentFrameCounter();
     void resetAll();
+signals:
+    void frameAdded();
 
 private:
     unsigned int currentFrame;

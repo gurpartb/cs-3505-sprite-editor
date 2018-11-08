@@ -29,8 +29,6 @@ private slots:
 
     void on_colorSelectButton_clicked();
 
-    void on_addFrameButton_clicked();
-
 private:
     Ui::MainWindow *ui;
 };

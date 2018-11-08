@@ -34,6 +34,12 @@ void DrawingWindow::userChoseSize(int size)
     }
 }
 
+void DrawingWindow::frameAdded()
+{
+    pixMap->fill(Qt::white);
+    setPixmap(*pixMap);
+}
+
 void DrawingWindow::mousePressEvent(QMouseEvent* event)
 {
 
@@ -41,8 +47,6 @@ void DrawingWindow::mousePressEvent(QMouseEvent* event)
     {
         std::cout << "clickin" << std::endl;
         currentlyDrawing = true;
-        emit clicked();
-        //so right here you'd need an "emit fill square @ X & Y"?
     }
 
 }

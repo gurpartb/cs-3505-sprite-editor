@@ -12,6 +12,7 @@ void Model::currentFrameUpdatePixmap(QPixmap *pixmap)
 
     std::cout << "UPDATING framesVector" << std::endl;
     framesVector[currentFrame]->addNewPixmap(pixmap);
+    std::cout << "Current Frame:  " << currentFrame << std::endl;
     std::cout << "updated framesVector" << std::endl;
 
 }
@@ -21,7 +22,8 @@ void Model::createNewFrame()
 
     Frame *newFrame = new Frame();
     framesVector.push_back(newFrame);
-
+    emit frameAdded();
+    std::cout << "helaiogej" << std::endl;
 }
 
 ///
@@ -40,6 +42,13 @@ void Model::updateCurrentFrameCounter()
 void Model::resetAll()
 {
     currentFrame = 0;
+
+    //Ranged based for to delete the entire framesVector
+    for (auto i: framesVector)
+    {
+        delete i;
+    }
+
     framesVector.clear();
 }
 

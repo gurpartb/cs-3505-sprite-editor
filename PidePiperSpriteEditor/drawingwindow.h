@@ -27,6 +27,7 @@ signals:
     void createdInitialFrame();
 
 public slots:
+    void frameAdded();
 
 private:
     void mousePressEvent(QMouseEvent *event);
