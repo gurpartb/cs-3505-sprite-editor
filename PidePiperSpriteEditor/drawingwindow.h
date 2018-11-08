@@ -28,6 +28,7 @@ signals:
 
 public slots:
     void frameAdded();
+    void undo(QPixmap*);
 
 private:
     void mousePressEvent(QMouseEvent *event);

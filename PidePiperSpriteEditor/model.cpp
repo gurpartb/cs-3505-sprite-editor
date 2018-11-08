@@ -13,7 +13,7 @@ void Model::currentFrameUpdatePixmap(QPixmap *pixmap)
     std::cout << "UPDATING framesVector" << std::endl;
     framesVector[currentFrame]->addNewPixmap(pixmap);
     std::cout << "Current Frame:  " << currentFrame << std::endl;
-    std::cout << "updated framesVector" << std::endl;
+    //std::cout << "updated framesVector" << std::endl;
 
 }
 
@@ -49,5 +49,10 @@ void Model::resetAll()
     }
 
     framesVector.clear();
+}
+
+void Model::undo(){
+    QPixmap* pix =framesVector[currentFrame]->undo();
+    emit undoSignal(pix);
 }
 

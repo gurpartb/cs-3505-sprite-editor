@@ -14,6 +14,7 @@ class Frame
 public:
     Frame();
     void addNewPixmap(QPixmap *pixmap);
+    QPixmap* undo();
 
 };
 

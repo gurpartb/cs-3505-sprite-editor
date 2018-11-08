@@ -46,7 +46,8 @@ void DrawingWindow::mousePressEvent(QMouseEvent* event)
 
     if (event->buttons() &Qt::LeftButton && sizeHasBeenChosen)
     {
-        std::cout << "clickin" << std::endl;
+        emit updatePixmap(pixMap);
+        //std::cout << "clickin" << std::endl;
         currentlyDrawing = true;
     }
 
@@ -57,7 +58,7 @@ void DrawingWindow::mouseMoveEvent(QMouseEvent *event)
 
      if ((event->buttons() & Qt::LeftButton) && currentlyDrawing && sizeHasBeenChosen)
      {
-        std::cout << "draggin" << std::endl;
+        //std::cout << "draggin" << std::endl;
         QPoint pos = event->pos();
         findPixelRatio(pos.x(), pos.y());
         drawPixel();
@@ -69,11 +70,11 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton && currentlyDrawing && sizeHasBeenChosen)
     {
-        std::cout << "releasin" << std::endl;
+        //std::cout << "releasin" << std::endl;
         QPoint pos = event->pos();
         findPixelRatio(pos.x(), pos.y());
 
-        emit updatePixmap(pixMap); //Save the previous Pixmap so we can undo.
+        //emit updatePixmap(pixMap); //Save the previous Pixmap so we can undo.
 
         drawPixel();
         currentlyDrawing = false;
@@ -96,7 +97,7 @@ void DrawingWindow::findPixelRatio(double currentX, double currentY)
 
 void DrawingWindow::drawPixel()
 {
-    std::cout << "PAINTIN" << std::endl;
+    //std::cout << "PAINTIN" << std::endl;
 
     QPointF topLeft;
     QPointF bottomRight;
@@ -120,5 +121,15 @@ void DrawingWindow::drawPixel()
     this->setPixmap(*pixMap);
 }
 
+void DrawingWindow::undo(QPixmap* map)
+{
+    //pixMap = map;
+    if(map == nullptr){
+        std::cout <<"Nothing left to undo" << '\n';
+        return;
+    }
+    pixMap = new QPixmap(*map);
+    this ->setPixmap(*pixMap);
+}
 
 
