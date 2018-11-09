@@ -51,7 +51,14 @@ void MainWindow::on_fileNew_triggered()
 
 void MainWindow::addFrameToUi(QPixmap pixmap, int frameCount)
 {
-    //std::string labelName = "frame";
+    //Code below is expanding the scrollArea so you can scroll through all of the current frame previews.
+    if (frameCount > 4)
+    {
+        int sizeOfFramePreview = 150;
+        int currentScrollHeight = ui->scrollAreaWidgetContents->height();
+        ui->scrollAreaWidgetContents->setMinimumHeight(currentScrollHeight + sizeOfFramePreview);
+    }
+
 
 }
 
