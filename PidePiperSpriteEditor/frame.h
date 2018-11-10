@@ -15,7 +15,7 @@ public:
     Frame();
     void addNewPixmap(QPixmap *pixmap);
     QPixmap* undo();
-
+    QPixmap* getPixmap();
 };
 
 #endif // FRAME_H

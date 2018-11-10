@@ -29,13 +29,15 @@ SOURCES += \
         mainwindow.cpp \
     drawingwindow.cpp \
     model.cpp \
-    frame.cpp
+    frame.cpp \
+    previewframe.cpp
 
 HEADERS += \
         mainwindow.h \
     drawingwindow.h \
     model.h \
-    frame.h
+    frame.h \
+    previewframe.h
 
 FORMS += \
         mainwindow.ui

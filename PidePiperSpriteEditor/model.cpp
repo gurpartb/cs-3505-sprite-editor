@@ -3,26 +3,36 @@
 Model::Model()
 {
 
-    currentFrame = 0; //need to update still.
+    currentFrame = 0;
 
 }
 
+///
+/// \brief Model::currentFrameUpdatePixmap:
+/// Sends a new Pixmap to the current frame's Pixmap Vector. Allows for Undo.
+/// \param pixmap:
+/// New updated Pixmap.
+///
 void Model::currentFrameUpdatePixmap(QPixmap *pixmap)
 {
 
-    std::cout << "UPDATING framesVector" << std::endl;
+    std::cout << "Model(currentFrameUpda) - UPDATING framesVector: " << currentFrame << std::endl;
     framesVector[currentFrame]->addNewPixmap(pixmap);
-    std::cout << "Current Frame:  " << currentFrame << std::endl;
-    //std::cout << "updated framesVector" << std::endl;
 
 }
 
+///
+/// \brief Model::createNewFrame:
+/// Creates a new frame for the UI.
+///
 void Model::createNewFrame()
 {
 
     Frame *newFrame = new Frame();
     framesVector.push_back(newFrame);
+    currentFrame = static_cast<unsigned int> (framesVector.size()-1);
     emit frameAdded();
+
 }
 
 ///
@@ -51,8 +61,23 @@ void Model::resetAll()
     framesVector.clear();
 }
 
-void Model::undo(){
-    QPixmap* pix =framesVector[currentFrame]->undo();
+void Model::undo()
+{
+    QPixmap* pix = framesVector[currentFrame]->undo();
     emit undoSignal(pix);
+}
+
+///
+/// \brief Model::retrieveFrameNumberFromClickedPreview:
+/// Gets what preview frame number was clicked on, to display it on the main drawing label.
+/// \param frameNumber:
+/// What preview frame was clicked to pull from the framesVector to display.
+///
+void Model::retrieveFrameNumberFromClickedPreview(int frameNumber)
+{
+    currentFrame = static_cast<unsigned int> (frameNumber);
+    std::cout << "Model(retrieveFrameNumFrom) - emit change display with frame: " << currentFrame << std::endl;
+    emit displaySelectedFrameFromPreview(framesVector[currentFrame]->getPixmap(), frameNumber);
+
 }
 

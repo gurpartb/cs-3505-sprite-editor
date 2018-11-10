@@ -18,9 +18,12 @@ public slots:
     void updateCurrentFrameCounter();
     void resetAll();
     void undo();
+    void retrieveFrameNumberFromClickedPreview(int);
+
 signals:
     void frameAdded();
     void undoSignal(QPixmap*);
+    void displaySelectedFrameFromPreview(QPixmap*, int);
 
 private:
     unsigned int currentFrame;
