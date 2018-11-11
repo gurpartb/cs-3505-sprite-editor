@@ -76,6 +76,8 @@ void DrawingWindow::mousePressEvent(QMouseEvent* event)
 {
     if (event->buttons() &Qt::LeftButton && sizeHasBeenChosen)
     {
+        QPoint point(event->pos());
+        clickedPoint = point;
         currentlyDrawing = true;
     }
 }
@@ -107,7 +109,10 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
     {
         // Save the previous Pixmap so we can undo.
         emit updatePixmap(pixMap);
-        drawPixel(event->pos());
+        if(isRectangleDrawing)
+            drawRectangle(event->pos());
+        else
+            drawPixel(event->pos());
         emit updateFramePreview(pixMap);
         currentlyDrawing = false;
     }
@@ -159,9 +164,32 @@ void DrawingWindow::drawPixel(QPoint pos){
     this->setPixmap(*pixMap);
 }
 
+void DrawingWindow::drawRectangle(QPoint pos){
+    // QRectF currentPixel = getCurrentPixel(pos);
+    QRectF pixel(clickedPoint.x(), clickedPoint.y(), pos.x()-clickedPoint.x(), pos.y()-clickedPoint.y());
+    // QRectF pixelMirror = getMirrorPixel(pos);
+
+    QPainter painter(pixMap);
+    QPainterPath painterPath;
+    QPen pen(color, 1);
+    painter.setPen(pen);
+    painterPath.addRect(pixel);
+    // if(isMirrorDrawing)
+    //     painterPath.addRect(pixelMirror);
+    painter.fillPath(painterPath, color);
+    painter.drawPath(painterPath);
+    this->setPixmap(*pixMap);
+}
+
+
+
 void DrawingWindow::setIsMirrorDrawing()
 {
     isMirrorDrawing = !isMirrorDrawing;
+}
+
+void DrawingWindow::setIsRectangleDrawing(){
+    isRectangleDrawing = !isRectangleDrawing;
 }
 
 void DrawingWindow::undo(QPixmap* map)

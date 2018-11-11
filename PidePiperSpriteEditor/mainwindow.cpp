@@ -70,6 +70,9 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
 
      //Mirror Pixel Connections
      connect(ui->mirrorDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsMirrorDrawing);
+
+     // Rectangle connection
+     connect(ui->rectangleDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsRectangleDrawing);
     fpsTimer = new QTimer(this);
     connect(fpsTimer, SIGNAL(timeout()), this, SLOT(getAnimationFrame()));
     connect(model, SIGNAL(sendFrameToAnimationPlayer(QPixmap*)), this, SLOT(playAnimation(QPixmap*)));

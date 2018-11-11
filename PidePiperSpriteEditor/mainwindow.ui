@@ -221,7 +221,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="rectangleButton">
+       <widget class="QPushButton" name="rectangleDrawButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -305,18 +305,15 @@
         <height>800</height>
        </size>
       </property>
-
       <property name="font">
        <font>
         <pointsize>20</pointsize>
         <weight>75</weight>
         <bold>true</bold>
        </font>
-       </property>
-
+      </property>
       <property name="autoFillBackground">
        <bool>false</bool>
-
       </property>
       <property name="styleSheet">
        <string notr="true">border: 1px solid black;
