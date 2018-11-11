@@ -130,7 +130,7 @@ QPointF DrawingWindow::getTopLeftPoint(QPoint pos){
 }
 
 QRectF DrawingWindow::getMirrorPixel(QPoint currentPoint){
-    QPoint mirrorPoint(currentPoint.x(),currentPoint.y() );
+    QPoint mirrorPoint(windowSize - currentPoint.x(),windowSize - currentPoint.y() );
     return getCurrentPixel(currentPoint);
 }
 
@@ -171,11 +171,10 @@ void DrawingWindow::drawPixel(QPoint pos){
    // QPointF mirrorPoint(800-pos.x(), 800-pos.y());
     QRectF pixelMirror = getCurrentPixel(pos);
     QPainter painter(pixMap);
+    painter.setPen(pen);
     if(isMirrorDrawing)
         painterPath.addRect(pixelMirror);
     painter.fillPath(painterPath, Qt::green);
-    painter.setPen(pen);
-    std::cout << " draw pixel deep " << std::endl;
     painter.drawPath(painterPath);
     this->setPixmap(*pixMap);
 }
