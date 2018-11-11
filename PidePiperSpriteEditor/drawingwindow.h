@@ -39,19 +39,20 @@ private:
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
 
-    void findPixelRatio(double currentX, double currentY);
-    void drawPixel();
+    //void findPixelRatio(double currentX, double currentY);
+    void drawPixel(QPoint pos);
+    QRectF getCurrentPixel(QPoint pos);
+    QRectF getMirrorPixel(QPoint pos);
+    QPointF getTopLeftPoint(QPoint pos);
     QPixmap *pixMap;
 
     bool currentlyDrawing;
+    bool mirrorDrawing;
     int pixelSize; //This is a field for the size of the window.
     int frameCount;
     int currentFrameSelected;
     const int windowSize = 800;
     bool sizeHasBeenChosen; //This is a test to check if the user has inputed size of the window before drawing.
-    double currentPixelX;
-    double currentPixelY;
-    double topLeftX, topLeftY, bottomRightX, bottomRightY;
     QColor color;
 };
 

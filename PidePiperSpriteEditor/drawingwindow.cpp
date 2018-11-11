@@ -59,12 +59,10 @@ void DrawingWindow::frameAdded()
 ///
 void DrawingWindow::mousePressEvent(QMouseEvent* event)
 {
-
     if (event->buttons() &Qt::LeftButton && sizeHasBeenChosen)
     {
         currentlyDrawing = true;
     }
-
 }
 
 ///
@@ -75,14 +73,11 @@ void DrawingWindow::mousePressEvent(QMouseEvent* event)
 ///
 void DrawingWindow::mouseMoveEvent(QMouseEvent *event)
 {
-
      if ((event->buttons() &Qt::LeftButton) && currentlyDrawing && sizeHasBeenChosen)
      {
-        QPoint pos = event->pos();
-        findPixelRatio(pos.x(), pos.y());
-        drawPixel();
+        drawPixel(event->pos());
+        std::cout << "mouse move event " << std::endl;
      }
-
 }
 
 ///
@@ -95,11 +90,9 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     if ((event->button() &Qt::LeftButton) && currentlyDrawing && sizeHasBeenChosen)
     {
-        QPoint pos = event->pos();
-        findPixelRatio(pos.x(), pos.y());
-
-        emit updatePixmap(pixMap); //Save the previous Pixmap so we can undo.
-        drawPixel();
+        // Save the previous Pixmap so we can undo.
+        emit updatePixmap(pixMap);
+        drawPixel(event->pos());
         emit updateFramePreview(pixMap);
         currentlyDrawing = false;
     }
@@ -108,43 +101,48 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
 ///
 /// \brief DrawingWindow::findPixelRatio:
 /// Helper method to find the size of the pixel.
-/// \param currentX
-/// \param currentY
+/// \param Qpoint pos
 ///
-void DrawingWindow::findPixelRatio(double currentX, double currentY)
+QRectF DrawingWindow::getCurrentPixel(QPoint pos)
 {
-    topLeftX = floor(currentX / pixelSize) * pixelSize;
-    topLeftY = floor(currentY / pixelSize) * pixelSize;
-
-    bottomRightX = topLeftX + pixelSize;
-    bottomRightY = topLeftY + pixelSize;
+    QPointF topLeft= getTopLeftPoint(pos);
+    // add pixel size to x and y corrdinate to get bottom right
+    QPointF bottomRight(topLeft.x() + pixelSize, topLeft.y() + pixelSize);
+    QRectF pixel(topLeft, bottomRight);
+    return pixel;
 }
+
+QPointF DrawingWindow::getTopLeftPoint(QPoint pos){
+    double topLeftX = floor(pos.x() / pixelSize) * pixelSize;
+    double topLeftY = floor(pos.y() / pixelSize) * pixelSize;
+    std::cout << topLeftX<< std::endl;
+    QPointF topLeft(topLeftX, topLeftY);
+    return topLeft;
+}
+
+QRectF DrawingWindow::getMirrorPixel(QPoint pos){
+    QRectF pixel;
+    return pixel;
+}
+
 
 ///
 /// \brief DrawingWindow::drawPixel:
 /// Method to draw pixels onto the screen with a selected color.
 ///
-void DrawingWindow::drawPixel()
+void DrawingWindow::drawPixel(QPoint pos)
 {
+    QRectF pixel = getCurrentPixel(pos);
+    QPainterPath painterPath;
+    painterPath.addRect(pixel);
 
-    QPointF topLeft;
-    QPointF bottomRight;
-
-    topLeft.setX(topLeftX);
-    topLeft.setY(topLeftY);
-
-    bottomRight.setX(bottomRightX);
-    bottomRight.setY(bottomRightY);
-
-    QRectF pixel(topLeft, bottomRight);
+    QPen pen(Qt::green, 1);
 
     QPainter painter(pixMap);
-    QPainterPath path;
-    QPen pen(Qt::green, 1);
+    painter.fillPath(painterPath, Qt::green);
     painter.setPen(pen);
-    path.addRect(pixel);
-    painter.fillPath(path, Qt::green);
-    painter.drawPath(path);
+    std::cout << " draw pixel deep " << std::endl;
+    painter.drawPath(painterPath);
     this->setPixmap(*pixMap);
 }
 

@@ -186,3 +186,8 @@ void MainWindow::on_colorSelectButton_clicked()
 
 }
 
+
+void MainWindow::on_mirrorDrawButton_clicked()
+{
+    emit mirrorDrawButtonClicked();
+}

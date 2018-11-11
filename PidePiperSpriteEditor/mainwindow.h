@@ -26,6 +26,7 @@ signals:
     void resetAll();
     void sendFrameNumberToModel(int frameNumber);
     void resetFrameCount();
+    void mirrorDrawButtonClicked();
 
 private slots:
     void addFrameToUi(QPixmap*, int);
@@ -33,6 +34,7 @@ private slots:
     void getFrameNumberToSendToModel(int);
     void on_fileNew_triggered();
     void on_colorSelectButton_clicked();
+    void on_mirrorDrawButton_clicked();
 
 private:
     Ui::MainWindow *ui;
