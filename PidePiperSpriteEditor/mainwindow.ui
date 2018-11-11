@@ -221,6 +221,56 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="rectangleButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>55</width>
+          <height>55</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>55</width>
+          <height>55</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>RectBtn</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="deleteFrameButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>55</width>
+          <height>55</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>55</width>
+          <height>55</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>DelFrm</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -420,6 +470,7 @@ background-color: rgb(255, 255, 255);</string>
     <addaction name="fileLoadSprite"/>
     <addaction name="fileExportGif"/>
     <addaction name="filePreviewGif"/>
+    <addaction name="fileClose"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -455,6 +506,11 @@ background-color: rgb(255, 255, 255);</string>
   <action name="fileNew">
    <property name="text">
     <string>New</string>
+   </property>
+  </action>
+  <action name="fileClose">
+   <property name="text">
+    <string>Close</string>
    </property>
   </action>
  </widget>

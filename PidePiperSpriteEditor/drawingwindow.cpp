@@ -12,11 +12,21 @@ DrawingWindow::DrawingWindow(QWidget* parent) : QLabel(parent)
     pixMap = new QPixmap(800, 800);
     pixMap->fill(Qt::transparent);
     setPixmap(*pixMap);
+    isMirrorDrawing = false;
 }
 
 DrawingWindow::~DrawingWindow()
 {
     
+}
+
+void DrawingWindow::initializeLabelFromLoad(int pixSize)
+{
+    sizeHasBeenChosen = true;
+    pixelSize = windowSize/pixSize;
+    frameCount = 0;
+    currentFrameSelected = 0;
+    resetFrameCountFromOpen();
 }
 
 ///
@@ -67,12 +77,10 @@ void DrawingWindow::setColor(QColor givenColor)
 ///
 void DrawingWindow::mousePressEvent(QMouseEvent* event)
 {
-
     if (event->buttons() &Qt::LeftButton && sizeHasBeenChosen)
     {
         currentlyDrawing = true;
     }
-
 }
 
 ///
@@ -83,14 +91,11 @@ void DrawingWindow::mousePressEvent(QMouseEvent* event)
 ///
 void DrawingWindow::mouseMoveEvent(QMouseEvent *event)
 {
-
      if ((event->buttons() &Qt::LeftButton) && currentlyDrawing && sizeHasBeenChosen)
      {
-        QPoint pos = event->pos();
-        findPixelRatio(pos.x(), pos.y());
-        drawPixel();
+        drawPixel(event->pos());
+        std::cout << "mouse move event " << std::endl;
      }
-
 }
 
 ///
@@ -103,11 +108,9 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     if ((event->button() &Qt::LeftButton) && currentlyDrawing && sizeHasBeenChosen)
     {
-        QPoint pos = event->pos();
-        findPixelRatio(pos.x(), pos.y());
-
-        emit updatePixmap(pixMap); //Save the previous Pixmap so we can undo.
-        drawPixel();
+        // Save the previous Pixmap so we can undo.
+        emit updatePixmap(pixMap);
+        drawPixel(event->pos());
         emit updateFramePreview(pixMap);
         currentlyDrawing = false;
     }
@@ -116,25 +119,60 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
 ///
 /// \brief DrawingWindow::findPixelRatio:
 /// Helper method to find the size of the pixel.
-/// \param currentX
-/// \param currentY
+/// \param Qpoint pos
 ///
-void DrawingWindow::findPixelRatio(double currentX, double currentY)
-{
-    topLeftX = floor(currentX / pixelSize) * pixelSize;
-    topLeftY = floor(currentY / pixelSize) * pixelSize;
+QRectF DrawingWindow::getCurrentPixel(QPoint pos){
+    QPointF topLeft= getTopLeftPoint(pos);
+    // add pixel size to x and y corrdinate to get bottom right
+    QPointF bottomRight(topLeft.x() + pixelSize, topLeft.y() + pixelSize);
+    QRectF pixel(topLeft, bottomRight);
+    return pixel;
+}
 
-    bottomRightX = topLeftX + pixelSize;
-    bottomRightY = topLeftY + pixelSize;
+QPointF DrawingWindow::getTopLeftPoint(QPoint pos){
+    double topLeftX = floor(pos.x() / pixelSize) * pixelSize;
+    double topLeftY = floor(pos.y() / pixelSize) * pixelSize;
+    std::cout << topLeftX<< std::endl;
+    QPointF topLeft(topLeftX, topLeftY);
+    return topLeft;
+}
+
+QRectF DrawingWindow::getMirrorPixel(QPoint currentPoint){
+    QPoint mirrorPoint(windowSize - currentPoint.x(),windowSize - currentPoint.y() );
+    return getCurrentPixel(mirrorPoint);
 }
 
 ///
 /// \brief DrawingWindow::drawPixel:
 /// Method to draw pixels onto the screen with a selected color.
 ///
-void DrawingWindow::drawPixel()
-{
+void DrawingWindow::drawPixel(QPoint pos){
+    QRectF pixel = getCurrentPixel(pos);
+    QRectF pixelMirror = getMirrorPixel(pos);
 
+    QPainter painter(pixMap);
+    QPainterPath painterPath;
+    QPen pen(Qt::green, 1);
+    painter.setPen(pen);
+    painterPath.addRect(pixel);
+    if(isMirrorDrawing)
+        painterPath.addRect(pixelMirror);
+    painter.fillPath(painterPath, Qt::green);
+    painter.drawPath(painterPath);
+    this->setPixmap(*pixMap);
+}
+
+void DrawingWindow::setIsMirrorDrawing()
+{
+    isMirrorDrawing = !isMirrorDrawing;
+}
+
+///
+/// \brief DrawingWindow::drawPixelFromLoad
+/// \param color
+///
+void DrawingWindow::drawPixelFromLoad(QColor color)
+{
     QPointF topLeft;
     QPointF bottomRight;
 
@@ -187,4 +225,52 @@ void DrawingWindow::displaySelectedFrameFromPreview(QPixmap *framePreviewPixmap,
 void DrawingWindow::resetFrameCount()
 {
     frameCount = -1;
+}
+
+///
+/// \brief DrawingWindow::resetFrameCountFromOpen
+///
+void DrawingWindow::resetFrameCountFromOpen()
+{
+    frameCount = 0;
+}
+
+///
+/// \brief DrawingWindow::openingFrame
+/// \param frameQueue
+/// \param pixmapSize
+///
+void DrawingWindow::openingFrame(QQueue<int>* frameQueue, int pixmapSize)
+{
+    pixMap->fill(Qt::white);
+    for(int i = 0; i < pixmapSize; i++)
+    {
+        for(int j = 0; j < pixmapSize; j++)
+        {
+            // change the pixel color
+            int red = frameQueue->dequeue();
+            int green = frameQueue->dequeue();
+            int blue = frameQueue->dequeue();
+            int alpha = frameQueue->dequeue();
+            QColor color(red, green, blue, alpha);
+            drawPixelFromLoad(color);
+        }
+    }
+    setPixmap(*pixMap);
+    QPixmap* newPixmap = new QPixmap(*pixMap);
+    displaySelectedFrameFromPreview(newPixmap, frameCount);
+    emit addPixmapToFrameFromLoad(newPixmap);
+    emit addFrameToPreviewOfFrames(newPixmap, frameCount);
+    frameCount++;
+}
+
+///
+/// \brief DrawingWindow::duplicatedFrame
+/// \param newPixmap
+///
+void DrawingWindow::duplicatedFrame(QPixmap* newPixmap){
+    frameCount++;
+    setPixmap(*newPixmap);
+    displaySelectedFrameFromPreview(newPixmap, frameCount);
+    emit addFrameToPreviewOfFrames(newPixmap, frameCount);
 }

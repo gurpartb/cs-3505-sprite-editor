@@ -1,4 +1,5 @@
 #include "model.h"
+#include<math.h>
 
 Model::Model()
 {
@@ -78,5 +79,106 @@ void Model::retrieveFrameNumberFromClickedPreview(int frameNumber)
     currentFrame = static_cast<unsigned int> (frameNumber);
     std::cout << "Model(retrieveFrameNumFromClickedPreview) - emit change display with frame: " << currentFrame << std::endl;
     emit displaySelectedFrameFromPreview(framesVector[currentFrame]->getPixmap(), frameNumber);
+}
+
+///
+/// \brief Model::saveAs
+///
+void Model::saveAs()
+{
+    std::vector<int> saveVector;
+    double pixmapSize = pow(numOfPixels, .5);
+    saveVector.push_back(signed(pixmapSize));
+    saveVector.push_back(signed(pixmapSize));
+    saveVector.push_back(10);
+    saveVector.push_back(signed(currentFrame)+1);
+    saveVector.push_back(10);
+    for(std::vector<Frame*>::iterator it = framesVector.begin(); it != framesVector.end(); ++it )
+    {
+        if((*it)->pixmapVector.size() != 0)
+        {
+            QPixmap *current = (*it)->pixmapVector.back();
+            QImage currentImage = current->toImage();
+
+            for(int i = 0; i < pixmapSize; i++)
+            {
+                for(int j = 0; j < pixmapSize; j++)
+                {
+                    QRgb pixelColor = currentImage.pixel(static_cast<int>(j*800/pixmapSize+10), static_cast<int>(i*800/pixmapSize+10));
+                    QColor color(pixelColor);
+                    saveVector.push_back(color.red());
+                    saveVector.push_back(color.green());
+                    saveVector.push_back(color.blue());
+                    saveVector.push_back(color.alpha());
+                    saveVector.push_back(10);
+                }
+            }
+        }
+        else
+        {
+            // iterate over a blank pixmap
+        }
+    }
+    emit sendSaveVector(saveVector);
+    createNewFrame();
+}
+
+///
+/// \brief Model::storeNumberOfPixels
+/// \param numberOfPixels
+///
+void Model::storeNumberOfPixels(int numberOfPixels)
+{
+    numOfPixels = static_cast<int>(pow(numberOfPixels, 2));
+}
+
+///
+/// \brief Model::openSprite
+/// \param frameQueue
+///
+void Model::openSprite(QQueue<int>* frameQueue)
+{
+    framesVector.clear(); // memory leaks
+    currentFrame = 0;
+    emit resetFrameCountFromOpen();
+    numOfPixels = frameQueue->dequeue();
+    frameQueue->dequeue();
+    emit enableButtonsFromLoad(numOfPixels);
+    int numOfFrames = frameQueue->dequeue();
+    for(int i = 0; i < numOfFrames; i++)
+    {
+        Frame* newFrame = new Frame();
+        framesVector.push_back(newFrame);
+       // QQueue<int>* newFrameQueue = frameQueue;
+        emit openFrame(frameQueue, numOfPixels);
+    }
+}
+
+///
+/// \brief Model::addPixmapFromDuplication
+/// \param newPixmap
+///
+void Model::addPixmapFromDuplication(QPixmap* newPixmap)
+{
+    framesVector.back()->addNewPixmap(newPixmap);
+}
+
+///
+/// \brief Model::duplicateFrame
+///
+void Model::duplicateFrame()
+{
+    Frame* newFrame = new Frame();
+    // add old pixmap
+    QPixmap* newPixmap = framesVector[currentFrame]->duplicate();
+    newFrame->addNewPixmap(newPixmap);
+    framesVector.push_back(newFrame);
+    updateCurrentFrameCounter();
+    emit duplicatedFrameAdded(newPixmap);
+}
+
+void Model::addPixmapFromLoad(QPixmap* newPixmap)
+{
+    framesVector.back()->addPixmapFromLoad(newPixmap);
 }
 

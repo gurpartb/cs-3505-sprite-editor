@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include<QFileDialog>
+#include<QTextStream>
 
 ///
 /// \brief MainWindow::MainWindow:
@@ -42,10 +44,31 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(this, &MainWindow::sendFrameNumberToModel, model, &Model::retrieveFrameNumberFromClickedPreview);
     connect(model, &Model::displaySelectedFrameFromPreview, ui->drawingWindowLabel, &DrawingWindow::displaySelectedFrameFromPreview);
 
-
     connect(this, &MainWindow::changeColor, ui->drawingWindowLabel, &DrawingWindow::setColor);
     ui->colorSelectButton->setStyleSheet("background-color: rgb(0,0,0,1)");
 
+    //Save Connection
+     connect(this, &MainWindow::save, model, &Model::saveAs);
+     connect(model, &Model::sendSaveVector, this, &MainWindow::saveAs);
+     connect(this, &MainWindow::sizeChosen, model, &Model::storeNumberOfPixels);
+     ui->fileSaveAs->setDisabled(true);
+
+     //Open Connections
+     connect(this, &MainWindow::openSprite, model, &Model::openSprite);
+     connect(model, &Model::resetFrameCountFromOpen, ui->drawingWindowLabel, &DrawingWindow::resetFrameCountFromOpen);
+     connect(model, &Model::openFrame, ui->drawingWindowLabel, &DrawingWindow::openingFrame);
+     connect(ui->drawingWindowLabel, &DrawingWindow::addDuplicatedPixmap, model, &Model::addPixmapFromDuplication);
+     connect(model, &Model::enableButtonsFromLoad, this, &MainWindow::enableUi);
+     connect(model, &Model::enableButtonsFromLoad, ui->drawingWindowLabel, &DrawingWindow::initializeLabelFromLoad);
+     connect(ui->drawingWindowLabel, &DrawingWindow::addPixmapToFrameFromLoad, model, &Model::addPixmapFromLoad);
+
+     //Duplicate Connections
+     connect(ui->duplicateButton, &QPushButton::pressed, model, &Model::duplicateFrame);
+     connect(model, &Model::duplicatedFrameAdded, ui->drawingWindowLabel, &DrawingWindow::duplicatedFrame);
+     connect(ui->drawingWindowLabel, &DrawingWindow::addFrameToPreviewOfFrames, this, &MainWindow::addFrameToUi);
+
+     //Mirror Pixel Connections
+     connect(ui->mirrorDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsMirrorDrawing);
 }
 
 MainWindow::~MainWindow()
@@ -68,6 +91,16 @@ void MainWindow::enableUi(bool enabled)
     ui->duplicateButton->setEnabled(enabled);
     ui->addFrameButton->setEnabled(enabled);
     ui->colorSelectButton->setEnabled(enabled);
+    ui->drawingWindowLabel->setEnabled(true);
+    ui->drawButton->setEnabled(true);
+    ui->eraseButton->setEnabled(true);
+    ui->colorDropButton->setEnabled(true);
+    ui->mirrorDrawButton->setEnabled(true);
+    ui->undoButton->setEnabled(true);
+    ui->duplicateButton->setEnabled(true);
+    ui->addFrameButton->setEnabled(true);
+    ui->colorSelectButton->setEnabled(true);
+    ui->fileSaveAs->setEnabled(true);
 }
 
 ///
@@ -89,18 +122,21 @@ void MainWindow::on_fileNew_triggered()
     if (msgBox.clickedButton()==smallSize)
     {
         emit resetAll();
+        emit sizeChosen(8);
         resetFramePreview();
         ui->drawingWindowLabel->userChoseSize(8);
     }
     else if (msgBox.clickedButton() == mediumSize)
     {
         emit resetAll();
+        emit sizeChosen(16);
         resetFramePreview();
         ui->drawingWindowLabel->userChoseSize(16);
     }
     else if (msgBox.clickedButton() == largeSize)
     {
         emit resetAll();
+        emit sizeChosen(32);
         resetFramePreview();
         ui->drawingWindowLabel->userChoseSize(32);
     }
@@ -138,7 +174,9 @@ void MainWindow::addFrameToUi(QPixmap *pixmap, int frameCount)
 }
 
 ///
-/// \brief MainWindow::updateFramePreview:
+/// \brief MainWindow::
+///
+/// :
 /// Function called when the selected frame is edited on the drawing label, to update the preview.
 /// \param pixmap: Updated pixmap to send to frame preview.
 ///
@@ -190,3 +228,94 @@ void MainWindow::on_colorSelectButton_clicked()
     emit changeColor(colorWindow.selectedColor());
 }
 
+
+
+//void MainWindow::on_mirrorDrawButton_clicked()
+//{
+//    emit mirrorDrawButtonClicked();
+
+///
+/// \brief MainWindow::on_fileSaveAs_triggered
+///
+void MainWindow::on_fileSaveAs_triggered()
+{
+    emit save();
+}
+
+///
+/// \brief MainWindow::saveAs
+/// \param saveVector
+///
+void MainWindow::saveAs(std::vector<int> saveVector)
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+        tr("Save Sprite"), "",
+        tr("Sprite (*.ssp);;All Files (*)"));
+
+    if (fileName.isEmpty())
+        return;
+    else {
+        QFile file(fileName);
+        if (!file.open(QIODevice::WriteOnly)) {
+            QMessageBox::information(this, tr("Unable to open file"),
+                file.errorString());
+            return;
+        }
+        QTextStream out(&file);
+        //out.setVersion(QDataStream::Qt_4_5);
+        for(std::vector<int>::iterator it = saveVector.begin(); it != saveVector.end(); ++it )
+        {
+            if(*it == 10)
+            {
+                out<<endl;
+                continue;
+            }
+            out << *it;
+            out << " ";
+        }
+    }
+}
+
+///
+/// \brief MainWindow::on_fileLoadSprite_triggered
+///
+void MainWindow::on_fileLoadSprite_triggered()
+{
+    previewFrameVector.clear(); // memery leaks
+    QQueue<int>* openQueue = new QQueue<int>;
+    QString fileName = QFileDialog::getOpenFileName(this,
+        tr("Open Sprite"), "",
+        tr("Sprite (*.ssp);;All Files (*)"));
+
+    if (fileName.isEmpty())
+           return;
+       else {
+
+           QFile file(fileName);
+
+           if (!file.open(QIODevice::ReadOnly)) {
+               QMessageBox::information(this, tr("Unable to open file"),
+                   file.errorString());
+               return;
+           }
+
+           QTextStream in(&file);
+           QString content = in.readAll();
+           QStringList data = content.split(" ");
+           for(const auto& i : data)
+           {
+               openQueue->enqueue(i.toInt());
+           }
+       }
+    emit openSprite(openQueue);
+}
+
+void MainWindow::on_mirrorDrawButton_clicked()
+{
+
+}
+
+void MainWindow::on_rectangleButton_clicked()
+{
+
+}
