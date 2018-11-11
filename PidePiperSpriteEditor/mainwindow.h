@@ -7,6 +7,7 @@
 #include <QMainWindow>
 #include <QPixmap>
 #include <QObject>
+#include <QTimer>
 #include <QMessageBox>
 #include <QColorDialog>
 
@@ -28,6 +29,7 @@ signals:
     void resetFrameCount();
     void sliderChanged(int);
     void updateFPSDisplay(int);
+    void retrieveAnimationFrameSignal(int);
 
 private slots:
     void addFrameToUi(QPixmap*, int);
@@ -38,11 +40,13 @@ private slots:
 
     void on_animationSlider_valueChanged(int value);
     void on_fpsSlider_valueChanged(int value);
+    void playAnimation(QPixmap *);
+    void getAnimationFrame();
 
 private:
     Ui::MainWindow *ui;
     std::vector<PreviewFrame*> previewFrameVector;
-
+    QTimer *fpsTimer;
 
     int currentSelectedFrame;
     int currentPlayedFrame;

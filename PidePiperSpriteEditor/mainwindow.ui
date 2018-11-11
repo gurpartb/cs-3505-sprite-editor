@@ -305,6 +305,9 @@ background-color: white;</string>
       </item>
       <item>
        <widget class="QSlider" name="fpsSlider">
+        <property name="maximum">
+         <number>60</number>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>

@@ -89,3 +89,6 @@ void Model::retrieveFrameNumberFromClickedPreview(int frameNumber)
     emit displaySelectedFrameFromPreview(framesVector[currentFrame]->getPixmap(), frameNumber);
 }
 
+void Model::retrieveFrameForPlayingAnimation(int frameNumber){
+    emit sendFrameToAnimationPlayer(framesVector[static_cast<unsigned int> (frameNumber)]->getPixmap());
+}

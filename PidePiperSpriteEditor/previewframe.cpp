@@ -42,3 +42,15 @@ void PreviewFrame::updatePixmap(QPixmap *pixmap)
 {
     this->setPixmap(pixmap->scaled(150, 150));
 }
+
+
+///
+/// \brief PreviewFrame::updatePixmap:
+/// Updates the current preview with a new pixmap when a user is using that preview on the UI.
+/// \param pixmap:
+/// New pixmap to be previewed.
+///
+QPixmap* PreviewFrame::getPixmap()
+{
+    return pixmap;
+}

@@ -20,12 +20,14 @@ public slots:
     void resetAll();
     void undo();
     void retrieveFrameNumberFromClickedPreview(int);
+    void retrieveFrameForPlayingAnimation(int);
 
 
 signals:
     void frameAdded();
     void undoSignal(QPixmap*);
     void displaySelectedFrameFromPreview(QPixmap*, int);
+    void sendFrameToAnimationPlayer(QPixmap*);
 
 private:
     unsigned int currentFrame;
