@@ -91,16 +91,6 @@ void MainWindow::enableUi(bool enabled)
     ui->duplicateButton->setEnabled(enabled);
     ui->addFrameButton->setEnabled(enabled);
     ui->colorSelectButton->setEnabled(enabled);
-    ui->drawingWindowLabel->setEnabled(true);
-    ui->drawButton->setEnabled(true);
-    ui->eraseButton->setEnabled(true);
-    ui->colorDropButton->setEnabled(true);
-    ui->mirrorDrawButton->setEnabled(true);
-    ui->undoButton->setEnabled(true);
-    ui->duplicateButton->setEnabled(true);
-    ui->addFrameButton->setEnabled(true);
-    ui->colorSelectButton->setEnabled(true);
-    ui->fileSaveAs->setEnabled(true);
 }
 
 ///

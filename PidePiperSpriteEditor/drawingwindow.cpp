@@ -37,15 +37,12 @@ void DrawingWindow::initializeLabelFromLoad(int pixSize)
 ///
 void DrawingWindow::userChoseSize(int size)
 {
-
     pixMap->fill(Qt::transparent);
     this->setPixmap(*pixMap);
     emit createdInitialFrame();
-
     std::cout << "Chose size: " << size << std::endl;
     pixelSize = windowSize / size;
     sizeHasBeenChosen = true;
-
 }
 
 ///
@@ -152,12 +149,12 @@ void DrawingWindow::drawPixel(QPoint pos){
 
     QPainter painter(pixMap);
     QPainterPath painterPath;
-    QPen pen(Qt::green, 1);
+    QPen pen(color, 1);
     painter.setPen(pen);
     painterPath.addRect(pixel);
     if(isMirrorDrawing)
         painterPath.addRect(pixelMirror);
-    painter.fillPath(painterPath, Qt::green);
+    painter.fillPath(painterPath, color);
     painter.drawPath(painterPath);
     this->setPixmap(*pixMap);
 }
