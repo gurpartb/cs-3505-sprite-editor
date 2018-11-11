@@ -98,10 +98,9 @@ void Model::saveAs()
     {
         if((*it)->pixmapVector.size() != 0)
         {
-            // If user only clicks once, this is the wrong pixmap
             QPixmap *current = (*it)->pixmapVector.back();
             QImage currentImage = current->toImage();
-            // loop over the last pixmap in each frame
+
             for(int i = 0; i < pixmapSize; i++)
             {
                 for(int j = 0; j < pixmapSize; j++)
@@ -140,17 +139,18 @@ void Model::storeNumberOfPixels(int numberOfPixels)
 void Model::openSprite(QQueue<int>* frameQueue)
 {
     framesVector.clear();
+    currentFrame = 0;
     emit resetFrameCountFromOpen();
-    int pixmapSize = frameQueue->dequeue();
+    numOfPixels = frameQueue->dequeue();
     frameQueue->dequeue();
+    emit enableButtonsFromLoad(numOfPixels);
     int numOfFrames = frameQueue->dequeue();
-    int pixelSize = 800/pixmapSize;
     for(int i = 0; i < numOfFrames; i++)
     {
         Frame* newFrame = new Frame();
         framesVector.push_back(newFrame);
         QQueue<int>* newFrameQueue = frameQueue;
-        emit openFrame(newFrameQueue, pixmapSize);
+        emit openFrame(newFrameQueue, numOfPixels);
     }
 }
 

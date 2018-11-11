@@ -61,10 +61,13 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
      connect(model, &Model::resetFrameCountFromOpen, ui->drawingWindowLabel, &DrawingWindow::resetFrameCountFromOpen);
      connect(model, &Model::openFrame, ui->drawingWindowLabel, &DrawingWindow::openingFrame);
      connect(ui->drawingWindowLabel, &DrawingWindow::addDuplicatedPixmap, model, &Model::addPixmapFromDuplication);
+     connect(model, &Model::enableButtonsFromLoad, this, &MainWindow::enableUi);
+     connect(model, &Model::enableButtonsFromLoad, ui->drawingWindowLabel, &DrawingWindow::initializeLabelFromLoad);
 
      //Duplicate Connections
      connect(ui->duplicateButton, &QPushButton::pressed, model, &Model::duplicateFrame);
      connect(model, &Model::duplicatedFrameAdded, ui->drawingWindowLabel, &DrawingWindow::duplicatedFrame);
+     connect(ui->drawingWindowLabel, &DrawingWindow::addFrameToPreviewOfFrames, this, &MainWindow::addFrameToUi);
 
 }
 

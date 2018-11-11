@@ -29,6 +29,7 @@ signals:
     void addFrameToUi(QPixmap*, int);
     void updateFramePreview(QPixmap*);
     void addDuplicatedPixmap(QPixmap*);
+    void addFrameToPreviewOfFrames(QPixmap*, int);
 
 public slots:
     void frameAdded();
@@ -38,6 +39,7 @@ public slots:
     void resetFrameCountFromOpen();
     void openingFrame(QQueue<int>*, int);
     void duplicatedFrame(QPixmap*);
+    void initializeLabelFromLoad(int);
 
 private:
     void mousePressEvent(QMouseEvent *event);

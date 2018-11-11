@@ -34,6 +34,7 @@ signals:
     void resetFrameCountFromOpen();
     void openFrame(QQueue<int>*, int);
     void duplicatedFrameAdded(QPixmap*);
+    void enableButtonsFromLoad(int);
 
 private:
     unsigned int currentFrame;

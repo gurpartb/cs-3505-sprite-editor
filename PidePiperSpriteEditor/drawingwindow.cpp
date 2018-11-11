@@ -19,6 +19,15 @@ DrawingWindow::~DrawingWindow()
     
 }
 
+void DrawingWindow::initializeLabelFromLoad(int pixSize)
+{
+    sizeHasBeenChosen = true;
+    pixelSize = windowSize/pixSize;
+    frameCount = 0;
+    currentFrameSelected = 0;
+    resetFrameCountFromOpen();
+}
+
 ///
 /// \brief DrawingWindow::userChoseSize:
 /// Method to create the first frame after a new file has been chosen and calculate the size of each pixel.
@@ -226,11 +235,7 @@ void DrawingWindow::resetFrameCountFromOpen()
 ///
 void DrawingWindow::openingFrame(QQueue<int>* frameQueue, int pixmapSize)
 {
-    sizeHasBeenChosen = true;
     pixMap->fill(Qt::white);
-    pixelSize = windowSize/pixmapSize;
-    // Fill the pixmap
-    // Find the pixel ratio
     for(int i = 0; i < pixmapSize; i++)
     {
         for(int j = 0; j < pixmapSize; j++)
@@ -249,7 +254,6 @@ void DrawingWindow::openingFrame(QQueue<int>* frameQueue, int pixmapSize)
     setPixmap(*pixMap);
     QPixmap* newPixmap = new QPixmap(*pixMap);
     emit addDuplicatedPixmap(newPixmap);
-    //emit addFrameToUi(*pixMap, frameCount);
 }
 
 ///
@@ -261,5 +265,7 @@ void DrawingWindow::duplicatedFrame(QPixmap* newPixmap)
     //*pixMap = newPixmap->copy();
     frameCount++;
     setPixmap(*newPixmap);
+    displaySelectedFrameFromPreview(newPixmap, frameCount);
+    emit addFrameToPreviewOfFrames(newPixmap, frameCount);
     //std::cout << "Current Frame: " << frameCount << std::endl;
 }
