@@ -108,7 +108,7 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
         QPoint pos = event->pos();
         findPixelRatio(pos.x(), pos.y());
 
-        emit saveCurrentFrame(pixMap);
+        emit saveCurrentFrame(pixMap);//saves the current frame being displayed after drawing
         drawPixel();
         emit updateFramePreview(pixMap);
         currentlyDrawing = false;
@@ -157,12 +157,17 @@ void DrawingWindow::drawPixel()
     painter.drawPath(path);
     this->setPixmap(*pixMap);
 }
-
+///
+/// \brief DrawingWindow::undo
+/// \param map Last map from the current frame
+/// Slot received from the model class
+/// displays the pixmap received from the model
+///
 void DrawingWindow::undo(QPixmap* map)
 {
     if(map == nullptr){
 
-        return;
+        return;//TODO: deletes current frame and moves back one frame
     }
     pixMap = new QPixmap(*map);
     this->setPixmap(*pixMap);

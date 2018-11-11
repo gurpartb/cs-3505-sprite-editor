@@ -60,7 +60,11 @@ void Model::resetAll()
 
     framesVector.clear();
 }
-
+///
+/// \brief Model::undo
+/// Slot called when undo is pressed
+/// returns the last saved pixmap from the current slected frame
+///
 void Model::undo()
 {
     QPixmap* pix = framesVector[currentFrame]->undo();
@@ -79,6 +83,12 @@ void Model::retrieveFrameNumberFromClickedPreview(int frameNumber)
     std::cout << "Model(retrieveFrameNumFromClickedPreview) - emit change display with frame: " << currentFrame << std::endl;
     emit displaySelectedFrameFromPreview(framesVector[currentFrame]->getPixmap(), frameNumber);
 }
+///
+/// \brief Model::saveCurrentFrame
+/// \param map the current map after drawing as comleted
+/// Slot called as soon as the user clicks on the drawing window
+/// Saves the pixmap before the user draws on the window
+///
 void Model::saveCurrentFrame(QPixmap* map){
     framesVector[currentFrame]->currentMap = new QPixmap(*map);
 }
