@@ -22,6 +22,7 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     ui->duplicateButton->setDisabled(true);
     ui->addFrameButton->setDisabled(true);
     ui->colorSelectButton->setDisabled(true);
+    ui->animationSlider->setDisabled(true);
 
     currentSelectedFrame = -1;
 
@@ -41,6 +42,7 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(ui->addFrameButton, &QPushButton::pressed, model, &Model::updateCurrentFrameCounter);
     connect(ui->addFrameButton, &QPushButton::pressed, model, &Model::createNewFrame);
     connect(ui->undoButton, &QPushButton::pressed, model, &Model::undo);
+    connect(this, SIGNAL(sliderChanged(int)), model, SLOT(setCurrentFrameFromSlider(int)));
     connect(model, &Model::undoSignal, ui->drawingWindowLabel, &DrawingWindow::undo);
     connect(model, &Model::frameAdded, ui->drawingWindowLabel, &DrawingWindow::frameAdded);
 
@@ -70,6 +72,7 @@ void MainWindow::enableUi()
     ui->duplicateButton->setEnabled(true);
     ui->addFrameButton->setEnabled(true);
     ui->colorSelectButton->setEnabled(true);
+    ui->animationSlider->setEnabled(true);
 }
 
 ///
@@ -113,7 +116,7 @@ void MainWindow::on_fileNew_triggered()
 
 ///
 /// \brief MainWindow::addFrameToUi:
-/// Adds a new frame to preview on the user interface.
+/// Adds a new frame to preview on the user interface and increases the animation slider.
 /// \param pixmap: Pixmap to be added to the ui preview.
 /// \param frameCount: what frame number to assign to the preview frame object.
 ///
@@ -135,8 +138,10 @@ void MainWindow::addFrameToUi(QPixmap *pixmap, int frameCount)
     ui->frameLayout->insertWidget(0, framePreview);
     currentSelectedFrame = frameCount;
     std::cout << "MainWindow(addFrameToUi) - Added a frame preview: " << currentSelectedFrame << std::endl;
-}
 
+    ui->animationSlider->setMaximum(frameCount);
+    //ui->animationSlider->setValue(frameCount);
+}
 ///
 /// \brief MainWindow::updateFramePreview:
 /// Function called when the selected frame is edited on the drawing label, to update the preview.
@@ -186,3 +191,8 @@ void MainWindow::on_colorSelectButton_clicked()
 
 }
 
+void MainWindow::on_animationSlider_valueChanged(int value)
+{
+    std::cout<< value << std::endl;
+    emit sliderChanged(value);
+}

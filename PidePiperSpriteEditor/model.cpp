@@ -43,6 +43,15 @@ void Model::updateCurrentFrameCounter()
 {
     currentFrame++;
 }
+///
+/// \brief Model::setCurrentFrameCounter
+/// Sets the current frame, called from changing the animation slider
+///
+void Model::setCurrentFrameFromSlider(int frameNumber)
+{
+    currentFrame = static_cast<unsigned int> (frameNumber);
+    emit displaySelectedFrameFromPreview(framesVector[currentFrame]->getPixmap(), frameNumber);
+}
 
 ///
 /// \brief Model::resetAll
@@ -78,6 +87,5 @@ void Model::retrieveFrameNumberFromClickedPreview(int frameNumber)
     currentFrame = static_cast<unsigned int> (frameNumber);
     std::cout << "Model(retrieveFrameNumFrom) - emit change display with frame: " << currentFrame << std::endl;
     emit displaySelectedFrameFromPreview(framesVector[currentFrame]->getPixmap(), frameNumber);
-
 }
 
