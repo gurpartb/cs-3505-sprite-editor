@@ -40,6 +40,7 @@ public slots:
     void openingFrame(QQueue<int>*, int);
     void duplicatedFrame(QPixmap*);
     void initializeLabelFromLoad(int);
+    void setIsMirrorDrawing();
 
 private:
     void mousePressEvent(QMouseEvent *event);
@@ -59,8 +60,9 @@ private:
     bool sizeHasBeenChosen; //This is a test to check if the user has inputed size of the window before drawing.
     double currentPixelX;
     double currentPixelY;
-    double topLeftX, topLeftY, bottomRightX, bottomRightY;
+    double topLeftX, topLeftY, bottomRightX, bottomRightY, topLeftXMirror, bottomRightXMirror;
     QColor color;
+    bool isMirrorDrawing;
 };
 
 #endif // DRAWINGWINDOW_H

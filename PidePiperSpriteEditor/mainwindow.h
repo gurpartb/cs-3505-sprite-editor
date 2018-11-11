@@ -42,6 +42,8 @@ private slots:
 
     void on_fileLoadSprite_triggered();
 
+    void on_mirrorDrawButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     std::vector<PreviewFrame*> previewFrameVector;

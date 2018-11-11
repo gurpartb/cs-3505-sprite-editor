@@ -69,6 +69,8 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
      connect(model, &Model::duplicatedFrameAdded, ui->drawingWindowLabel, &DrawingWindow::duplicatedFrame);
      connect(ui->drawingWindowLabel, &DrawingWindow::addFrameToPreviewOfFrames, this, &MainWindow::addFrameToUi);
 
+     //Mirror Pixel Connections
+     connect(ui->mirrorDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsMirrorDrawing);
 }
 
 MainWindow::~MainWindow()
@@ -285,4 +287,9 @@ void MainWindow::on_fileLoadSprite_triggered()
            }
        }
     emit openSprite(openQueue);
+}
+
+void MainWindow::on_mirrorDrawButton_clicked()
+{
+
 }

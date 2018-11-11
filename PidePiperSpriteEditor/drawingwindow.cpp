@@ -12,6 +12,7 @@ DrawingWindow::DrawingWindow(QWidget* parent) : QLabel(parent)
     pixMap = new QPixmap(800, 800);
     pixMap->fill(Qt::white);
     setPixmap(*pixMap);
+    isMirrorDrawing = false;
 }
 
 DrawingWindow::~DrawingWindow()
@@ -127,6 +128,9 @@ void DrawingWindow::findPixelRatio(double currentX, double currentY)
 
     bottomRightX = topLeftX + pixelSize;
     bottomRightY = topLeftY + pixelSize;
+
+    topLeftXMirror = windowSize - bottomRightX;
+    bottomRightXMirror = topLeftXMirror + pixelSize;
 }
 
 ///
@@ -138,23 +142,37 @@ void DrawingWindow::drawPixel()
 
     QPointF topLeft;
     QPointF bottomRight;
+    QPointF topLeftMirror;
+    QPointF bottomRightMirror;
 
     topLeft.setX(topLeftX);
     topLeft.setY(topLeftY);
+    topLeftMirror.setX(topLeftXMirror);
+    topLeftMirror.setY(topLeftY);
 
     bottomRight.setX(bottomRightX);
     bottomRight.setY(bottomRightY);
+    bottomRightMirror.setX(bottomRightXMirror);
+    bottomRightMirror.setY(bottomRightY);
 
     QRectF pixel(topLeft, bottomRight);
+    QRectF pixelMirror(topLeftMirror, bottomRightMirror);
 
     QPainter painter(pixMap);
     QPainterPath path;
     QPen pen(Qt::green, 1);
     painter.setPen(pen);
     path.addRect(pixel);
+    if(isMirrorDrawing)
+        path.addRect(pixelMirror);
     painter.fillPath(path, Qt::green);
     painter.drawPath(path);
     this->setPixmap(*pixMap);
+}
+
+void DrawingWindow::setIsMirrorDrawing()
+{
+    isMirrorDrawing = !isMirrorDrawing;
 }
 
 ///
@@ -163,8 +181,6 @@ void DrawingWindow::drawPixel()
 ///
 void DrawingWindow::drawPixelFromLoad(QColor color)
 {
-    //std::cout << "PAINTIN" << std::endl;
-
     QPointF topLeft;
     QPointF bottomRight;
 
@@ -174,7 +190,6 @@ void DrawingWindow::drawPixelFromLoad(QColor color)
     bottomRight.setX(bottomRightX);
     bottomRight.setY(bottomRightY);
 
-    //QRectF(const QPointF &topLeft, const QPointF &bottomRight)
     QRectF pixel(topLeft, bottomRight);
 
     QPainter painter(pixMap);
