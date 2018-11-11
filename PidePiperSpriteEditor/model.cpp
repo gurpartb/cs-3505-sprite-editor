@@ -191,3 +191,6 @@ void Model::addPixmapFromLoad(QPixmap* newPixmap)
     framesVector.back()->addPixmapFromLoad(newPixmap);
 }
 
+void Model::retrieveFrameForPlayingAnimation(int frameNumber){
+    emit sendFrameToAnimationPlayer(framesVector[static_cast<unsigned int> (frameNumber)]->getPixmap());
+}

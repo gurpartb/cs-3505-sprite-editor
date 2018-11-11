@@ -70,6 +70,10 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
 
      //Mirror Pixel Connections
      connect(ui->mirrorDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsMirrorDrawing);
+    fpsTimer = new QTimer(this);
+    connect(fpsTimer, SIGNAL(timeout()), this, SLOT(getAnimationFrame()));
+    connect(model, SIGNAL(sendFrameToAnimationPlayer(QPixmap*)), this, SLOT(playAnimation(QPixmap*)));
+    connect(this, SIGNAL(retrieveAnimationFrameSignal(int)), model, SLOT(retrieveFrameForPlayingAnimation(int)));
 }
 
 MainWindow::~MainWindow()
@@ -200,6 +204,27 @@ void MainWindow::resetFramePreview()
 
 }
 
+
+void MainWindow::getAnimationFrame()
+{
+    std::cout << "Getting Animation Frame: " << currentPlayedFrame << std::endl;
+    if(static_cast<unsigned int> (currentPlayedFrame) > previewFrameVector.size() - 1)
+    {
+        currentPlayedFrame = 0;
+    }
+    emit retrieveAnimationFrameSignal(currentPlayedFrame);
+    currentPlayedFrame++;
+}
+
+
+void MainWindow::playAnimation(QPixmap * pixmap)
+{
+
+    const QPixmap pixmapInstance = *pixmap;
+
+    ui->fpsPreviewLabel->setPixmap(pixmapInstance.scaled(150, 150));
+}
+
 ///
 /// \brief MainWindow::getFrameNumberToSendToModel
 /// Helper method to connect the mouse click event with the frame number from PreviewFrame.
@@ -320,5 +345,21 @@ void MainWindow::on_animationSlider_valueChanged(int value)
 
 void MainWindow::on_fpsSlider_valueChanged(int value)
 {
+    if(value > 0)
+    {
+        currentPlayedFrame = 0;
+        if(fpsTimer->isActive())
+        {
+            fpsTimer -> setInterval(int(1000 / value));
+        }
+        else
+        {
+            fpsTimer -> start(int(1000 / value));
+        }
 
+    }
+    else
+    {
+        fpsTimer -> stop();
+    }
 }

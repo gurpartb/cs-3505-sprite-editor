@@ -27,7 +27,7 @@ public slots:
     void addPixmapFromDuplication(QPixmap*);
     void duplicateFrame();
     void addPixmapFromLoad(QPixmap*);
-
+    void retrieveFrameForPlayingAnimation(int);
 
 signals:
     void frameAdded();
@@ -38,6 +38,7 @@ signals:
     void openFrame(QQueue<int>*, int);
     void duplicatedFrameAdded(QPixmap*);
     void enableButtonsFromLoad(int);
+    void sendFrameToAnimationPlayer(QPixmap*);
 
 private:
     unsigned int currentFrame;
