@@ -23,6 +23,7 @@ public:
 
 signals:
     void resetAll();
+    void changeColor(QColor color);
 
 private slots:
     void addFrameToUi(QPixmap, int);

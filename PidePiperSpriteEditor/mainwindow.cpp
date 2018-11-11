@@ -13,6 +13,8 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(this, &MainWindow::resetAll, model, &Model::resetAll);
     connect(model, &Model::frameAdded, ui->drawingWindowLabel, &DrawingWindow::frameAdded);
     connect(ui->drawingWindowLabel, &DrawingWindow::addFrameToUi, this, &MainWindow::addFrameToUi);
+    connect(this, &MainWindow::changeColor, ui->drawingWindowLabel, &DrawingWindow::setColor);
+    ui->colorSelectButton->setStyleSheet("background-color: rgb(0,0,0,1)");
 }
 
 MainWindow::~MainWindow()
@@ -57,6 +59,9 @@ void MainWindow::addFrameToUi(QPixmap pixmap, int frameCount)
 
 void MainWindow::on_colorSelectButton_clicked()
 {
-
+    QColorDialog colorWindow;
+    colorWindow.exec();
+    ui->colorSelectButton->setStyleSheet("background-color: " + colorWindow.selectedColor().name());
+    emit changeColor(colorWindow.selectedColor());
 }
 

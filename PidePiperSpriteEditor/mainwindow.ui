@@ -213,7 +213,10 @@
          </size>
         </property>
         <property name="text">
-         <string>COLOr</string>
+         <string/>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -252,10 +255,12 @@
         <height>800</height>
        </size>
       </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
       <property name="styleSheet">
        <string notr="true">border: 1px solid black;
-
-background-color: white;</string>
+background-color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string/>
