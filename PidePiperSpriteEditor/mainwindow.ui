@@ -436,7 +436,7 @@ background-color: rgb(255, 255, 255);</string>
         <item>
          <widget class="QSlider" name="animationSlider">
           <property name="maximum">
-           <number>99</number>
+           <number>0</number>
           </property>
           <property name="pageStep">
            <number>1</number>

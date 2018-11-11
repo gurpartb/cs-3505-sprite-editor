@@ -35,6 +35,7 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(ui->addFrameButton, &QPushButton::pressed, model, &Model::updateCurrentFrameCounter);
     connect(ui->addFrameButton, &QPushButton::pressed, model, &Model::createNewFrame);
     connect(ui->undoButton, &QPushButton::pressed, model, &Model::undo);
+    connect(this, SIGNAL(sliderChanged(int)), model, SLOT(setCurrentFrameFromSlider(int)));
     connect(model, &Model::undoSignal, ui->drawingWindowLabel, &DrawingWindow::undo);
     connect(model, &Model::frameAdded, ui->drawingWindowLabel, &DrawingWindow::frameAdded);
     connect(ui->drawingWindowLabel, &DrawingWindow::enableUiSignal, this, &MainWindow::enableUi);
@@ -139,7 +140,7 @@ void MainWindow::on_fileNew_triggered()
 
 ///
 /// \brief MainWindow::addFrameToUi:
-/// Adds a new frame to preview on the user interface.
+/// Adds a new frame to preview on the user interface and increases the animation slider.
 /// \param pixmap: Pixmap to be added to the ui preview.
 /// \param frameCount: what frame number to assign to the preview frame object.
 ///
@@ -161,8 +162,10 @@ void MainWindow::addFrameToUi(QPixmap *pixmap, int frameCount)
     ui->frameLayout->insertWidget(0, framePreview);
     currentSelectedFrame = frameCount;
     std::cout << "MainWindow(addFrameToUi) - Added a frame preview: " << currentSelectedFrame << std::endl;
-}
 
+    ui->animationSlider->setMaximum(frameCount);
+    //ui->animationSlider->setValue(frameCount);
+}
 ///
 /// \brief MainWindow::
 ///
@@ -306,6 +309,16 @@ void MainWindow::on_mirrorDrawButton_clicked()
 }
 
 void MainWindow::on_rectangleButton_clicked()
+{
+
+}
+void MainWindow::on_animationSlider_valueChanged(int value)
+{
+    std::cout<< value << std::endl;
+    emit sliderChanged(value);
+}
+
+void MainWindow::on_fpsSlider_valueChanged(int value)
 {
 
 }

@@ -17,6 +17,7 @@ public slots:
     void currentFrameUpdatePixmap(QPixmap*);
     void createNewFrame();
     void updateCurrentFrameCounter();
+    void setCurrentFrameFromSlider(int);
     void resetAll();
     void undo();
     void retrieveFrameNumberFromClickedPreview(int);
@@ -26,6 +27,7 @@ public slots:
     void addPixmapFromDuplication(QPixmap*);
     void duplicateFrame();
     void addPixmapFromLoad(QPixmap*);
+
 
 signals:
     void frameAdded();

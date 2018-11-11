@@ -44,6 +44,15 @@ void Model::updateCurrentFrameCounter()
 {
     currentFrame++;
 }
+///
+/// \brief Model::setCurrentFrameCounter
+/// Sets the current frame, called from changing the animation slider
+///
+void Model::setCurrentFrameFromSlider(int frameNumber)
+{
+    currentFrame = static_cast<unsigned int> (frameNumber);
+    emit displaySelectedFrameFromPreview(framesVector[currentFrame]->getPixmap(), frameNumber);
+}
 
 ///
 /// \brief Model::resetAll

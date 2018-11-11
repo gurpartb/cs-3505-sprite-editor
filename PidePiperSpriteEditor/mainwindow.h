@@ -32,6 +32,8 @@ signals:
     void save();
     void sizeChosen(int);
     void openSprite(QQueue<int>*);
+    void sliderChanged(int);
+    void updateFPSDisplay(int);
 
 private slots:
     void addFrameToUi(QPixmap*, int);
@@ -45,10 +47,17 @@ private slots:
     void on_fileLoadSprite_triggered();
     void on_rectangleButton_clicked();
 
+    void on_animationSlider_valueChanged(int value);
+    void on_fpsSlider_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
     std::vector<PreviewFrame*> previewFrameVector;
+
+
     int currentSelectedFrame;
+    int currentPlayedFrame;
+
     void resetFramePreview();
     void enableUi(bool);
 };
