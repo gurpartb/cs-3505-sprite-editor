@@ -8,7 +8,7 @@
 PreviewFrame::PreviewFrame(int frameNumber, QPixmap *pixmap, QWidget* parent) : QLabel(parent)
 {
     this->frameNumber = frameNumber;
-
+    this->setStyleSheet("background-color:rgb(255,255,255,1); border: 1px solid black");
     this->setPixmap(pixmap->scaled(150, 150));
 }
 

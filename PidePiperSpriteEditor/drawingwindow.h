@@ -20,6 +20,7 @@ public:
     explicit DrawingWindow(QWidget* parent = Q_NULLPTR);
     ~DrawingWindow();
     void userChoseSize(int size);
+    void setColor(QColor givenColor);
 
 signals:
     void clicked();
@@ -27,6 +28,7 @@ signals:
     void createdInitialFrame();
     void addFrameToUi(QPixmap*, int);
     void updateFramePreview(QPixmap*);
+    void enableUiSignal(bool);
 
 public slots:
     void frameAdded();

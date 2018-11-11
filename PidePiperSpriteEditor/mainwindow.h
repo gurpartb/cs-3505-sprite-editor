@@ -26,6 +26,7 @@ signals:
     void resetAll();
     void sendFrameNumberToModel(int frameNumber);
     void resetFrameCount();
+    void changeColor(QColor color);
 
 private slots:
     void addFrameToUi(QPixmap*, int);
@@ -39,7 +40,7 @@ private:
     std::vector<PreviewFrame*> previewFrameVector;
     int currentSelectedFrame;
     void resetFramePreview();
-    void enableUi();
+    void enableUi(bool);
 };
 
 #endif // MAINWINDOW_H

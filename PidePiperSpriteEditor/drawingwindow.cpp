@@ -10,7 +10,7 @@ DrawingWindow::DrawingWindow(QWidget* parent) : QLabel(parent)
     frameCount = -1; //Starting at -1 since the first initial frame is the 0th frame.
     sizeHasBeenChosen = false;
     pixMap = new QPixmap(800, 800);
-    pixMap->fill(Qt::white);
+    pixMap->fill(Qt::transparent);
     setPixmap(*pixMap);
 }
 
@@ -27,7 +27,8 @@ DrawingWindow::~DrawingWindow()
 ///
 void DrawingWindow::userChoseSize(int size)
 {
-    pixMap->fill(Qt::white);
+
+    pixMap->fill(Qt::transparent);
     this->setPixmap(*pixMap);
     emit createdInitialFrame();
 
@@ -43,12 +44,19 @@ void DrawingWindow::userChoseSize(int size)
 ///
 void DrawingWindow::frameAdded()
 {
-    pixMap->fill(Qt::white);
+    pixMap->fill(Qt::transparent);
     frameCount++;
     this->setPixmap(*pixMap);
     currentFrameSelected = frameCount;
     emit addFrameToUi(pixMap, frameCount);
     emit updatePixmap(pixMap);
+}
+
+
+
+void DrawingWindow::setColor(QColor givenColor)
+{
+    color = givenColor;
 }
 
 ///
@@ -140,10 +148,10 @@ void DrawingWindow::drawPixel()
 
     QPainter painter(pixMap);
     QPainterPath path;
-    QPen pen(Qt::green, 1);
+    QPen pen(color, 1);
     painter.setPen(pen);
     path.addRect(pixel);
-    painter.fillPath(path, Qt::green);
+    painter.fillPath(path, color);
     painter.drawPath(path);
     this->setPixmap(*pixMap);
 }

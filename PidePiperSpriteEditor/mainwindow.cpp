@@ -13,15 +13,7 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     ui->scrollArea->setWidgetResizable(true);
 
     //Disable Ui until user sets size.
-    ui->drawingWindowLabel->setDisabled(true);
-    ui->drawButton->setDisabled(true);
-    ui->eraseButton->setDisabled(true);
-    ui->colorDropButton->setDisabled(true);
-    ui->mirrorDrawButton->setDisabled(true);
-    ui->undoButton->setDisabled(true);
-    ui->duplicateButton->setDisabled(true);
-    ui->addFrameButton->setDisabled(true);
-    ui->colorSelectButton->setDisabled(true);
+    enableUi(false);
 
     currentSelectedFrame = -1;
 
@@ -43,10 +35,16 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(ui->undoButton, &QPushButton::pressed, model, &Model::undo);
     connect(model, &Model::undoSignal, ui->drawingWindowLabel, &DrawingWindow::undo);
     connect(model, &Model::frameAdded, ui->drawingWindowLabel, &DrawingWindow::frameAdded);
+    connect(ui->drawingWindowLabel, &DrawingWindow::enableUiSignal, this, &MainWindow::enableUi);
+
 
     //Frame Preview Class Connections:
     connect(this, &MainWindow::sendFrameNumberToModel, model, &Model::retrieveFrameNumberFromClickedPreview);
     connect(model, &Model::displaySelectedFrameFromPreview, ui->drawingWindowLabel, &DrawingWindow::displaySelectedFrameFromPreview);
+
+
+    connect(this, &MainWindow::changeColor, ui->drawingWindowLabel, &DrawingWindow::setColor);
+    ui->colorSelectButton->setStyleSheet("background-color: rgb(0,0,0,1)");
 
 }
 
@@ -59,17 +57,17 @@ MainWindow::~MainWindow()
 /// \brief MainWindow::enableUi:
 /// Enables Ui from passive state to let user manage buttons.
 ///
-void MainWindow::enableUi()
+void MainWindow::enableUi(bool enabled)
 {
-    ui->drawingWindowLabel->setEnabled(true);
-    ui->drawButton->setEnabled(true);
-    ui->eraseButton->setEnabled(true);
-    ui->colorDropButton->setEnabled(true);
-    ui->mirrorDrawButton->setEnabled(true);
-    ui->undoButton->setEnabled(true);
-    ui->duplicateButton->setEnabled(true);
-    ui->addFrameButton->setEnabled(true);
-    ui->colorSelectButton->setEnabled(true);
+    ui->drawingWindowLabel->setEnabled(enabled);
+    ui->drawButton->setEnabled(enabled);
+    ui->eraseButton->setEnabled(enabled);
+    ui->colorDropButton->setEnabled(enabled);
+    ui->mirrorDrawButton->setEnabled(enabled);
+    ui->undoButton->setEnabled(enabled);
+    ui->duplicateButton->setEnabled(enabled);
+    ui->addFrameButton->setEnabled(enabled);
+    ui->colorSelectButton->setEnabled(enabled);
 }
 
 ///
@@ -86,27 +84,29 @@ void MainWindow::on_fileNew_triggered()
     QAbstractButton* largeSize = msgBox.addButton(tr("32x32"), QMessageBox::NoRole);
     msgBox.setStandardButtons(QMessageBox::Cancel);
 
-    msgBox.exec();
+    int sign = msgBox.exec();
+
     if (msgBox.clickedButton()==smallSize)
     {
         emit resetAll();
         resetFramePreview();
         ui->drawingWindowLabel->userChoseSize(8);
-        enableUi();
     }
     else if (msgBox.clickedButton() == mediumSize)
     {
         emit resetAll();
         resetFramePreview();
         ui->drawingWindowLabel->userChoseSize(16);
-        enableUi();
     }
     else if (msgBox.clickedButton() == largeSize)
     {
         emit resetAll();
         resetFramePreview();
         ui->drawingWindowLabel->userChoseSize(32);
-        enableUi();
+    }
+
+    if(sign != QMessageBox::Cancel) {
+        enableUi(true);
     }
 
 }
@@ -184,6 +184,9 @@ void MainWindow::getFrameNumberToSendToModel(int chosenFrameNumber)
 
 void MainWindow::on_colorSelectButton_clicked()
 {
-
+    QColorDialog colorWindow;
+    colorWindow.exec();
+    ui->colorSelectButton->setStyleSheet("background-color: " + colorWindow.selectedColor().name());
+    emit changeColor(colorWindow.selectedColor());
 }
 
