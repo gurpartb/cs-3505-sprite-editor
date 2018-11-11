@@ -25,6 +25,7 @@ public slots:
     void openSprite(QQueue<int>*);
     void addPixmapFromDuplication(QPixmap*);
     void duplicateFrame();
+    void addPixmapFromLoad(QPixmap*);
 
 signals:
     void frameAdded();
@@ -34,6 +35,7 @@ signals:
     void resetFrameCountFromOpen();
     void openFrame(QQueue<int>*, int);
     void duplicatedFrameAdded(QPixmap*);
+    void enableButtonsFromLoad(int);
 
 private:
     unsigned int currentFrame;

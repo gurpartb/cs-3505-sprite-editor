@@ -25,6 +25,11 @@ void Frame::addNewPixmap(QPixmap *pixmap)
 
 }
 
+void Frame::addPixmapFromLoad(QPixmap *pixmap)
+{
+    pixmapVector.push_back(pixmap);
+}
+
 ///
 /// \brief Frame::getPixmap:
 /// Gets the most recent pixmap from the current frame.

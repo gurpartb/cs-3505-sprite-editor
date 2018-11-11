@@ -61,11 +61,17 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
      connect(model, &Model::resetFrameCountFromOpen, ui->drawingWindowLabel, &DrawingWindow::resetFrameCountFromOpen);
      connect(model, &Model::openFrame, ui->drawingWindowLabel, &DrawingWindow::openingFrame);
      connect(ui->drawingWindowLabel, &DrawingWindow::addDuplicatedPixmap, model, &Model::addPixmapFromDuplication);
+     connect(model, &Model::enableButtonsFromLoad, this, &MainWindow::enableUi);
+     connect(model, &Model::enableButtonsFromLoad, ui->drawingWindowLabel, &DrawingWindow::initializeLabelFromLoad);
+     connect(ui->drawingWindowLabel, &DrawingWindow::addPixmapToFrameFromLoad, model, &Model::addPixmapFromLoad);
 
      //Duplicate Connections
      connect(ui->duplicateButton, &QPushButton::pressed, model, &Model::duplicateFrame);
      connect(model, &Model::duplicatedFrameAdded, ui->drawingWindowLabel, &DrawingWindow::duplicatedFrame);
+     connect(ui->drawingWindowLabel, &DrawingWindow::addFrameToPreviewOfFrames, this, &MainWindow::addFrameToUi);
 
+     //Mirror Pixel Connections
+     connect(ui->mirrorDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsMirrorDrawing);
 }
 
 MainWindow::~MainWindow()
@@ -160,7 +166,9 @@ void MainWindow::addFrameToUi(QPixmap *pixmap, int frameCount)
 }
 
 ///
-/// \brief MainWindow::updateFramePreview:
+/// \brief MainWindow::
+///
+/// :
 /// Function called when the selected frame is edited on the drawing label, to update the preview.
 /// \param pixmap: Updated pixmap to send to frame preview.
 ///
@@ -209,11 +217,11 @@ void MainWindow::on_colorSelectButton_clicked()
 }
 
 
-<<<<<<< HEAD
-void MainWindow::on_mirrorDrawButton_clicked()
-{
-    emit mirrorDrawButtonClicked();
-=======
+
+//void MainWindow::on_mirrorDrawButton_clicked()
+//{
+//    emit mirrorDrawButtonClicked();
+
 ///
 /// \brief MainWindow::on_fileSaveAs_triggered
 ///
@@ -261,6 +269,7 @@ void MainWindow::saveAs(std::vector<int> saveVector)
 ///
 void MainWindow::on_fileLoadSprite_triggered()
 {
+    previewFrameVector.clear(); // memery leaks
     QQueue<int>* openQueue = new QQueue<int>;
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Open Sprite"), "",
@@ -287,5 +296,9 @@ void MainWindow::on_fileLoadSprite_triggered()
            }
        }
     emit openSprite(openQueue);
->>>>>>> caleb1
+}
+
+void MainWindow::on_mirrorDrawButton_clicked()
+{
+
 }

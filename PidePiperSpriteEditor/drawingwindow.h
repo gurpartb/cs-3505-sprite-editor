@@ -29,6 +29,8 @@ signals:
     void addFrameToUi(QPixmap*, int);
     void updateFramePreview(QPixmap*);
     void addDuplicatedPixmap(QPixmap*);
+    void addFrameToPreviewOfFrames(QPixmap*, int);
+    void addPixmapToFrameFromLoad(QPixmap*);
 
 public slots:
     void frameAdded();
@@ -38,23 +40,23 @@ public slots:
     void resetFrameCountFromOpen();
     void openingFrame(QQueue<int>*, int);
     void duplicatedFrame(QPixmap*);
+    void initializeLabelFromLoad(int);
+    void setIsMirrorDrawing();
 
 private:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
 
-<<<<<<< HEAD
     //void findPixelRatio(double currentX, double currentY);
     void drawPixel(QPoint pos);
     QRectF getCurrentPixel(QPoint pos);
     QRectF getMirrorPixel(QPoint pos);
     QPointF getTopLeftPoint(QPoint pos);
-=======
-    void findPixelRatio(double currentX, double currentY);
-    void drawPixel();
+
+    // void findPixelRatio(double currentX, double currentY);
+    // void drawPixel();
     void drawPixelFromLoad(QColor);
->>>>>>> caleb1
     QPixmap *pixMap;
 
     bool currentlyDrawing;
@@ -64,7 +66,13 @@ private:
     int currentFrameSelected;
     const int windowSize = 800;
     bool sizeHasBeenChosen; //This is a test to check if the user has inputed size of the window before drawing.
+
+   // double currentPixelX;
+   // double currentPixelY;
+    double topLeftX, topLeftY, bottomRightX, bottomRightY, topLeftXMirror, bottomRightXMirror;
+
     QColor color;
+    bool isMirrorDrawing;
 };
 
 #endif // DRAWINGWINDOW_H

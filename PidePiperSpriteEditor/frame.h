@@ -13,6 +13,7 @@ public:
     std::vector<QPixmap*> pixmapVector;
 
     Frame();
+    void addPixmapFromLoad(QPixmap* pixmap);
     void addNewPixmap(QPixmap *pixmap);
     QPixmap* undo();
     QPixmap* getPixmap();
