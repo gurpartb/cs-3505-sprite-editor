@@ -76,8 +76,7 @@ void Model::undo()
 void Model::retrieveFrameNumberFromClickedPreview(int frameNumber)
 {
     currentFrame = static_cast<unsigned int> (frameNumber);
-    std::cout << "Model(retrieveFrameNumFrom) - emit change display with frame: " << currentFrame << std::endl;
+    std::cout << "Model(retrieveFrameNumFromClickedPreview) - emit change display with frame: " << currentFrame << std::endl;
     emit displaySelectedFrameFromPreview(framesVector[currentFrame]->getPixmap(), frameNumber);
-
 }
 

@@ -28,7 +28,7 @@ DrawingWindow::~DrawingWindow()
 void DrawingWindow::userChoseSize(int size)
 {
     pixMap->fill(Qt::white);
-    setPixmap(*pixMap);
+    this->setPixmap(*pixMap);
     emit createdInitialFrame();
 
     std::cout << "Chose size: " << size << std::endl;
@@ -45,7 +45,7 @@ void DrawingWindow::frameAdded()
 {
     pixMap->fill(Qt::white);
     frameCount++;
-    setPixmap(*pixMap);
+    this->setPixmap(*pixMap);
     currentFrameSelected = frameCount;
     emit addFrameToUi(pixMap, frameCount);
     emit updatePixmap(pixMap);
@@ -168,8 +168,8 @@ void DrawingWindow::displaySelectedFrameFromPreview(QPixmap *framePreviewPixmap,
 {
     currentFrameSelected = frameSelected;
     std::cout << "DrawingWindow(displaySelected) - Updating main Pixmap from frame preview: " << currentFrameSelected << std::endl;
-    this->pixMap = framePreviewPixmap;
-    this->setPixmap(*framePreviewPixmap);
+    *this->pixMap = *framePreviewPixmap;
+    this->setPixmap(*pixMap);
 }
 
 ///

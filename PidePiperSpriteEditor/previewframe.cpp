@@ -27,7 +27,7 @@ void PreviewFrame::mousePressEvent(QMouseEvent *event)
 {
     if (event->buttons() &Qt::LeftButton)
     {
-        std::cout << "PreviewFrame - Selected new Frame from Preview: " << frameNumber << std::endl;
+        std::cout << "PreviewFrame(mousePressEvent) - Selected new Frame from Preview: " << frameNumber << std::endl;
         emit sendFrameNumber(frameNumber);
     }
 }

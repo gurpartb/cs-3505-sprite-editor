@@ -33,7 +33,7 @@ void Frame::addNewPixmap(QPixmap *pixmap)
 ///
 QPixmap* Frame::getPixmap()
 {
-    std::cout << "Frame(getPixmap) - returning pixmap" << std::endl;
+    std::cout << "Frame(getPixmap) - returning pixmap: " << pixmapVector.back() << std::endl;
     return pixmapVector.back();
 }
 

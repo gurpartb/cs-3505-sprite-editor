@@ -177,6 +177,7 @@ void MainWindow::resetFramePreview()
 ///
 void MainWindow::getFrameNumberToSendToModel(int chosenFrameNumber)
 {
+    std::cout << "MainWindow(getFrameNumberToSendToModel) - Retrieved Frame Number to send to Model: " << chosenFrameNumber << std::endl;
     currentSelectedFrame = chosenFrameNumber;
     emit sendFrameNumberToModel(chosenFrameNumber);
 }
