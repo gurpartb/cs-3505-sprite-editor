@@ -164,33 +164,6 @@ void DrawingWindow::setIsMirrorDrawing()
     isMirrorDrawing = !isMirrorDrawing;
 }
 
-///
-/// \brief DrawingWindow::drawPixelFromLoad
-/// \param color
-///
-void DrawingWindow::drawPixelFromLoad(QColor color)
-{
-    QPointF topLeft;
-    QPointF bottomRight;
-
-    topLeft.setX(topLeftX);
-    topLeft.setY(topLeftY);
-
-    bottomRight.setX(bottomRightX);
-    bottomRight.setY(bottomRightY);
-
-    QRectF pixel(topLeft, bottomRight);
-
-    QPainter painter(pixMap);
-    QPainterPath path;
-    QPen pen(color, 1);
-    painter.setPen(pen);
-    path.addRect(pixel);
-    painter.fillPath(path, color);
-    painter.drawPath(path);
-    this->setPixmap(*pixMap);
-}
-
 void DrawingWindow::undo(QPixmap* map)
 {
     if(map == nullptr){
@@ -239,7 +212,7 @@ void DrawingWindow::resetFrameCountFromOpen()
 ///
 void DrawingWindow::openingFrame(QQueue<int>* frameQueue, int pixmapSize)
 {
-    pixMap->fill(Qt::white);
+    pixMap->fill(Qt::transparent);
     for(int i = 0; i < pixmapSize; i++)
     {
         for(int j = 0; j < pixmapSize; j++)
@@ -249,8 +222,11 @@ void DrawingWindow::openingFrame(QQueue<int>* frameQueue, int pixmapSize)
             int green = frameQueue->dequeue();
             int blue = frameQueue->dequeue();
             int alpha = frameQueue->dequeue();
-            QColor color(red, green, blue, alpha);
-            drawPixelFromLoad(color);
+            QColor loadColor(red, green, blue, alpha);
+            QPoint loadPoint(j*windowSize/pixmapSize, i*windowSize/pixmapSize);
+            color = loadColor;
+            isMirrorDrawing = false;
+            drawPixel(loadPoint);
         }
     }
     setPixmap(*pixMap);

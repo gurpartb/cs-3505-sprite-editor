@@ -96,6 +96,7 @@ void MainWindow::enableUi(bool enabled)
     ui->duplicateButton->setEnabled(enabled);
     ui->addFrameButton->setEnabled(enabled);
     ui->colorSelectButton->setEnabled(enabled);
+    ui->fileSaveAs->setEnabled(enabled);
 }
 
 ///
