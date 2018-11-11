@@ -11,11 +11,14 @@ class Frame
     //Fields
     std::vector<QPixmap*> pixmapVector;
 
+
+
 public:
     Frame();
     void addNewPixmap(QPixmap *pixmap);
     QPixmap* undo();
     QPixmap* getPixmap();
+    QPixmap *currentMap;
 };
 
 #endif // FRAME_H

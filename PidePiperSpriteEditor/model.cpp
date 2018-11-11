@@ -79,4 +79,7 @@ void Model::retrieveFrameNumberFromClickedPreview(int frameNumber)
     std::cout << "Model(retrieveFrameNumFromClickedPreview) - emit change display with frame: " << currentFrame << std::endl;
     emit displaySelectedFrameFromPreview(framesVector[currentFrame]->getPixmap(), frameNumber);
 }
+void Model::saveCurrentFrame(QPixmap* map){
+    framesVector[currentFrame]->currentMap = new QPixmap(*map);
+}
 

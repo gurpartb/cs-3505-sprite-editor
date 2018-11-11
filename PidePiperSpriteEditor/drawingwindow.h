@@ -29,6 +29,7 @@ signals:
     void addFrameToUi(QPixmap*, int);
     void updateFramePreview(QPixmap*);
     void enableUiSignal(bool);
+    void saveCurrentFrame(QPixmap*);
 
 public slots:
     void frameAdded();

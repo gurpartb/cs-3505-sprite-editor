@@ -28,6 +28,7 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     //DrawingWindow and Model connections
     connect(ui->drawingWindowLabel, &DrawingWindow::updatePixmap, model, &Model::currentFrameUpdatePixmap);
     connect(ui->drawingWindowLabel, &DrawingWindow::createdInitialFrame, model, &Model::createNewFrame);
+    connect(ui->drawingWindowLabel, &DrawingWindow::saveCurrentFrame, model, &Model::saveCurrentFrame);
 
     //UI to Model connections
     connect(ui->addFrameButton, &QPushButton::pressed, model, &Model::updateCurrentFrameCounter);

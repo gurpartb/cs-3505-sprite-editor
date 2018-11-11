@@ -19,6 +19,7 @@ public slots:
     void resetAll();
     void undo();
     void retrieveFrameNumberFromClickedPreview(int);
+    void saveCurrentFrame(QPixmap*);
 
 signals:
     void frameAdded();

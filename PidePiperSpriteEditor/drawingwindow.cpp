@@ -50,6 +50,7 @@ void DrawingWindow::frameAdded()
     currentFrameSelected = frameCount;
     emit addFrameToUi(pixMap, frameCount);
     emit updatePixmap(pixMap);
+    emit saveCurrentFrame(pixMap);
 }
 
 
@@ -70,6 +71,7 @@ void DrawingWindow::mousePressEvent(QMouseEvent* event)
 
     if (event->buttons() &Qt::LeftButton && sizeHasBeenChosen)
     {
+        emit updatePixmap(pixMap);//save the last instance of the map for undo
         currentlyDrawing = true;
     }
 
@@ -106,7 +108,7 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
         QPoint pos = event->pos();
         findPixelRatio(pos.x(), pos.y());
 
-        emit updatePixmap(pixMap); //Save the previous Pixmap so we can undo.
+        emit saveCurrentFrame(pixMap);
         drawPixel();
         emit updateFramePreview(pixMap);
         currentlyDrawing = false;
@@ -159,7 +161,7 @@ void DrawingWindow::drawPixel()
 void DrawingWindow::undo(QPixmap* map)
 {
     if(map == nullptr){
-        std::cout <<"Nothing left to undo" << '\n';
+
         return;
     }
     pixMap = new QPixmap(*map);
@@ -176,7 +178,7 @@ void DrawingWindow::displaySelectedFrameFromPreview(QPixmap *framePreviewPixmap,
 {
     currentFrameSelected = frameSelected;
     std::cout << "DrawingWindow(displaySelected) - Updating main Pixmap from frame preview: " << currentFrameSelected << std::endl;
-    *this->pixMap = *framePreviewPixmap;
+    *this->pixMap = framePreviewPixmap->copy();
     this->setPixmap(*pixMap);
 }
 
