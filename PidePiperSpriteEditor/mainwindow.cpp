@@ -63,6 +63,7 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
      connect(ui->drawingWindowLabel, &DrawingWindow::addDuplicatedPixmap, model, &Model::addPixmapFromDuplication);
      connect(model, &Model::enableButtonsFromLoad, this, &MainWindow::enableUi);
      connect(model, &Model::enableButtonsFromLoad, ui->drawingWindowLabel, &DrawingWindow::initializeLabelFromLoad);
+     connect(ui->drawingWindowLabel, &DrawingWindow::addPixmapToFrameFromLoad, model, &Model::addPixmapFromLoad);
 
      //Duplicate Connections
      connect(ui->duplicateButton, &QPushButton::pressed, model, &Model::duplicateFrame);
@@ -165,7 +166,9 @@ void MainWindow::addFrameToUi(QPixmap *pixmap, int frameCount)
 }
 
 ///
-/// \brief MainWindow::updateFramePreview:
+/// \brief MainWindow::
+///
+/// :
 /// Function called when the selected frame is edited on the drawing label, to update the preview.
 /// \param pixmap: Updated pixmap to send to frame preview.
 ///
@@ -261,6 +264,7 @@ void MainWindow::saveAs(std::vector<int> saveVector)
 ///
 void MainWindow::on_fileLoadSprite_triggered()
 {
+    previewFrameVector.clear(); // memery leaks
     QQueue<int>* openQueue = new QQueue<int>;
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Open Sprite"), "",

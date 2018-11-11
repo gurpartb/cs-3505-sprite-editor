@@ -30,6 +30,7 @@ signals:
     void updateFramePreview(QPixmap*);
     void addDuplicatedPixmap(QPixmap*);
     void addFrameToPreviewOfFrames(QPixmap*, int);
+    void addPixmapToFrameFromLoad(QPixmap*);
 
 public slots:
     void frameAdded();

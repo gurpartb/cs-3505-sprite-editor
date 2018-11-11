@@ -138,7 +138,7 @@ void Model::storeNumberOfPixels(int numberOfPixels)
 ///
 void Model::openSprite(QQueue<int>* frameQueue)
 {
-    framesVector.clear();
+    framesVector.clear(); // memory leaks
     currentFrame = 0;
     emit resetFrameCountFromOpen();
     numOfPixels = frameQueue->dequeue();
@@ -149,8 +149,8 @@ void Model::openSprite(QQueue<int>* frameQueue)
     {
         Frame* newFrame = new Frame();
         framesVector.push_back(newFrame);
-        QQueue<int>* newFrameQueue = frameQueue;
-        emit openFrame(newFrameQueue, numOfPixels);
+       // QQueue<int>* newFrameQueue = frameQueue;
+        emit openFrame(frameQueue, numOfPixels);
     }
 }
 
@@ -175,5 +175,10 @@ void Model::duplicateFrame()
     framesVector.push_back(newFrame);
     updateCurrentFrameCounter();
     emit duplicatedFrameAdded(newPixmap);
+}
+
+void Model::addPixmapFromLoad(QPixmap* newPixmap)
+{
+    framesVector.back()->addPixmapFromLoad(newPixmap);
 }
 

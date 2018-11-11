@@ -265,10 +265,12 @@ void DrawingWindow::openingFrame(QQueue<int>* frameQueue, int pixmapSize)
             drawPixelFromLoad(color);
         }
     }
-    frameCount++;
     setPixmap(*pixMap);
     QPixmap* newPixmap = new QPixmap(*pixMap);
-    emit addDuplicatedPixmap(newPixmap);
+    displaySelectedFrameFromPreview(newPixmap, frameCount);
+    emit addPixmapToFrameFromLoad(newPixmap);
+    emit addFrameToPreviewOfFrames(newPixmap, frameCount);
+    frameCount++;
 }
 
 ///
