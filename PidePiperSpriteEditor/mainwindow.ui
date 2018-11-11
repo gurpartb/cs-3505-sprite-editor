@@ -462,6 +462,7 @@ background-color: white;</string>
     <addaction name="fileLoadSprite"/>
     <addaction name="fileExportGif"/>
     <addaction name="filePreviewGif"/>
+    <addaction name="fileClose"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -497,6 +498,11 @@ background-color: white;</string>
   <action name="fileNew">
    <property name="text">
     <string>New</string>
+   </property>
+  </action>
+  <action name="fileClose">
+   <property name="text">
+    <string>Close</string>
    </property>
   </action>
  </widget>

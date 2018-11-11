@@ -302,3 +302,8 @@ void MainWindow::on_mirrorDrawButton_clicked()
 {
 
 }
+
+void MainWindow::on_rectangleButton_clicked()
+{
+
+}

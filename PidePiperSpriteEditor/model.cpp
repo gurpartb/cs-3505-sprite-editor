@@ -121,6 +121,7 @@ void Model::saveAs()
         }
     }
     emit sendSaveVector(saveVector);
+    createNewFrame();
 }
 
 ///
