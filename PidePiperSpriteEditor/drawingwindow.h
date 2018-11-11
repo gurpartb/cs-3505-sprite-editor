@@ -12,6 +12,7 @@
 #include <math.h>
 #include <QRectF>
 #include <QPainter>
+#include <QQueue>
 
 class DrawingWindow : public QLabel {
     Q_OBJECT
@@ -27,23 +28,33 @@ signals:
     void createdInitialFrame();
     void addFrameToUi(QPixmap*, int);
     void updateFramePreview(QPixmap*);
+    void addDuplicatedPixmap(QPixmap*);
 
 public slots:
     void frameAdded();
     void undo(QPixmap*);
     void displaySelectedFrameFromPreview(QPixmap*, int);
     void resetFrameCount();
+    void resetFrameCountFromOpen();
+    void openingFrame(QQueue<int>*, int);
+    void duplicatedFrame(QPixmap*);
 
 private:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
 
+<<<<<<< HEAD
     //void findPixelRatio(double currentX, double currentY);
     void drawPixel(QPoint pos);
     QRectF getCurrentPixel(QPoint pos);
     QRectF getMirrorPixel(QPoint pos);
     QPointF getTopLeftPoint(QPoint pos);
+=======
+    void findPixelRatio(double currentX, double currentY);
+    void drawPixel();
+    void drawPixelFromLoad(QColor);
+>>>>>>> caleb1
     QPixmap *pixMap;
 
     bool currentlyDrawing;

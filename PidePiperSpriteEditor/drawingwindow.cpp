@@ -146,6 +146,36 @@ void DrawingWindow::drawPixel(QPoint pos)
     this->setPixmap(*pixMap);
 }
 
+///
+/// \brief DrawingWindow::drawPixelFromLoad
+/// \param color
+///
+void DrawingWindow::drawPixelFromLoad(QColor color)
+{
+    //std::cout << "PAINTIN" << std::endl;
+
+    QPointF topLeft;
+    QPointF bottomRight;
+
+    topLeft.setX(topLeftX);
+    topLeft.setY(topLeftY);
+
+    bottomRight.setX(bottomRightX);
+    bottomRight.setY(bottomRightY);
+
+    //QRectF(const QPointF &topLeft, const QPointF &bottomRight)
+    QRectF pixel(topLeft, bottomRight);
+
+    QPainter painter(pixMap);
+    QPainterPath path;
+    QPen pen(color, 1);
+    painter.setPen(pen);
+    path.addRect(pixel);
+    painter.fillPath(path, color);
+    painter.drawPath(path);
+    this->setPixmap(*pixMap);
+}
+
 void DrawingWindow::undo(QPixmap* map)
 {
     if(map == nullptr){
@@ -177,4 +207,57 @@ void DrawingWindow::displaySelectedFrameFromPreview(QPixmap *framePreviewPixmap,
 void DrawingWindow::resetFrameCount()
 {
     frameCount = -1;
+}
+
+///
+/// \brief DrawingWindow::resetFrameCountFromOpen
+///
+void DrawingWindow::resetFrameCountFromOpen()
+{
+    frameCount = 0;
+}
+
+///
+/// \brief DrawingWindow::openingFrame
+/// \param frameQueue
+/// \param pixmapSize
+///
+void DrawingWindow::openingFrame(QQueue<int>* frameQueue, int pixmapSize)
+{
+    sizeHasBeenChosen = true;
+    pixMap->fill(Qt::white);
+    pixelSize = windowSize/pixmapSize;
+    // Fill the pixmap
+    // Find the pixel ratio
+    for(int i = 0; i < pixmapSize; i++)
+    {
+        for(int j = 0; j < pixmapSize; j++)
+        {
+            // change the pixel color
+            int red = frameQueue->dequeue();
+            int green = frameQueue->dequeue();
+            int blue = frameQueue->dequeue();
+            int alpha = frameQueue->dequeue();
+            QColor color(red, green, blue, alpha);
+            findPixelRatio(j*windowSize/pixmapSize, i*windowSize/pixmapSize);
+            drawPixelFromLoad(color);
+        }
+    }
+    frameCount++;
+    setPixmap(*pixMap);
+    QPixmap* newPixmap = new QPixmap(*pixMap);
+    emit addDuplicatedPixmap(newPixmap);
+    //emit addFrameToUi(*pixMap, frameCount);
+}
+
+///
+/// \brief DrawingWindow::duplicatedFrame
+/// \param newPixmap
+///
+void DrawingWindow::duplicatedFrame(QPixmap* newPixmap)
+{
+    //*pixMap = newPixmap->copy();
+    frameCount++;
+    setPixmap(*newPixmap);
+    //std::cout << "Current Frame: " << frameCount << std::endl;
 }

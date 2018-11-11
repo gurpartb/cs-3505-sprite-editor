@@ -47,3 +47,13 @@ QPixmap* Frame::undo()
     pixmapVector.pop_back();
     return lastMap;
 }
+
+///
+/// \brief Frame::duplicate
+/// \return
+///
+QPixmap* Frame::duplicate()
+{
+    QPixmap* newPixmap = new QPixmap(*pixmapVector.back());
+    return newPixmap;
+}

@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include<QFileDialog>
+#include<QTextStream>
 
 ///
 /// \brief MainWindow::MainWindow:
@@ -48,6 +50,22 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(this, &MainWindow::sendFrameNumberToModel, model, &Model::retrieveFrameNumberFromClickedPreview);
     connect(model, &Model::displaySelectedFrameFromPreview, ui->drawingWindowLabel, &DrawingWindow::displaySelectedFrameFromPreview);
 
+    //Save Connection
+     connect(this, &MainWindow::save, model, &Model::saveAs);
+     connect(model, &Model::sendSaveVector, this, &MainWindow::saveAs);
+     connect(this, &MainWindow::sizeChosen, model, &Model::storeNumberOfPixels);
+     ui->fileSaveAs->setDisabled(true);
+
+     //Open Connections
+     connect(this, &MainWindow::openSprite, model, &Model::openSprite);
+     connect(model, &Model::resetFrameCountFromOpen, ui->drawingWindowLabel, &DrawingWindow::resetFrameCountFromOpen);
+     connect(model, &Model::openFrame, ui->drawingWindowLabel, &DrawingWindow::openingFrame);
+     connect(ui->drawingWindowLabel, &DrawingWindow::addDuplicatedPixmap, model, &Model::addPixmapFromDuplication);
+
+     //Duplicate Connections
+     connect(ui->duplicateButton, &QPushButton::pressed, model, &Model::duplicateFrame);
+     connect(model, &Model::duplicatedFrameAdded, ui->drawingWindowLabel, &DrawingWindow::duplicatedFrame);
+
 }
 
 MainWindow::~MainWindow()
@@ -70,6 +88,7 @@ void MainWindow::enableUi()
     ui->duplicateButton->setEnabled(true);
     ui->addFrameButton->setEnabled(true);
     ui->colorSelectButton->setEnabled(true);
+    ui->fileSaveAs->setEnabled(true);
 }
 
 ///
@@ -90,6 +109,7 @@ void MainWindow::on_fileNew_triggered()
     if (msgBox.clickedButton()==smallSize)
     {
         emit resetAll();
+        emit sizeChosen(8);
         resetFramePreview();
         ui->drawingWindowLabel->userChoseSize(8);
         enableUi();
@@ -97,6 +117,7 @@ void MainWindow::on_fileNew_triggered()
     else if (msgBox.clickedButton() == mediumSize)
     {
         emit resetAll();
+        emit sizeChosen(16);
         resetFramePreview();
         ui->drawingWindowLabel->userChoseSize(16);
         enableUi();
@@ -104,6 +125,7 @@ void MainWindow::on_fileNew_triggered()
     else if (msgBox.clickedButton() == largeSize)
     {
         emit resetAll();
+        emit sizeChosen(32);
         resetFramePreview();
         ui->drawingWindowLabel->userChoseSize(32);
         enableUi();
@@ -187,7 +209,83 @@ void MainWindow::on_colorSelectButton_clicked()
 }
 
 
+<<<<<<< HEAD
 void MainWindow::on_mirrorDrawButton_clicked()
 {
     emit mirrorDrawButtonClicked();
+=======
+///
+/// \brief MainWindow::on_fileSaveAs_triggered
+///
+void MainWindow::on_fileSaveAs_triggered()
+{
+    emit save();
+}
+
+///
+/// \brief MainWindow::saveAs
+/// \param saveVector
+///
+void MainWindow::saveAs(std::vector<int> saveVector)
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+        tr("Save Sprite"), "",
+        tr("Sprite (*.ssp);;All Files (*)"));
+
+    if (fileName.isEmpty())
+        return;
+    else {
+        QFile file(fileName);
+        if (!file.open(QIODevice::WriteOnly)) {
+            QMessageBox::information(this, tr("Unable to open file"),
+                file.errorString());
+            return;
+        }
+        QTextStream out(&file);
+        //out.setVersion(QDataStream::Qt_4_5);
+        for(std::vector<int>::iterator it = saveVector.begin(); it != saveVector.end(); ++it )
+        {
+            if(*it == 10)
+            {
+                out<<endl;
+                continue;
+            }
+            out << *it;
+            out << " ";
+        }
+    }
+}
+
+///
+/// \brief MainWindow::on_fileLoadSprite_triggered
+///
+void MainWindow::on_fileLoadSprite_triggered()
+{
+    QQueue<int>* openQueue = new QQueue<int>;
+    QString fileName = QFileDialog::getOpenFileName(this,
+        tr("Open Sprite"), "",
+        tr("Sprite (*.ssp);;All Files (*)"));
+
+    if (fileName.isEmpty())
+           return;
+       else {
+
+           QFile file(fileName);
+
+           if (!file.open(QIODevice::ReadOnly)) {
+               QMessageBox::information(this, tr("Unable to open file"),
+                   file.errorString());
+               return;
+           }
+
+           QTextStream in(&file);
+           QString content = in.readAll();
+           QStringList data = content.split(" ");
+           for(const auto& i : data)
+           {
+               openQueue->enqueue(i.toInt());
+           }
+       }
+    emit openSprite(openQueue);
+>>>>>>> caleb1
 }

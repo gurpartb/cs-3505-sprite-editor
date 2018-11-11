@@ -1,4 +1,5 @@
 #include "model.h"
+#include<math.h>
 
 Model::Model()
 {
@@ -79,5 +80,100 @@ void Model::retrieveFrameNumberFromClickedPreview(int frameNumber)
     std::cout << "Model(retrieveFrameNumFrom) - emit change display with frame: " << currentFrame << std::endl;
     emit displaySelectedFrameFromPreview(framesVector[currentFrame]->getPixmap(), frameNumber);
 
+}
+
+///
+/// \brief Model::saveAs
+///
+void Model::saveAs()
+{
+    std::vector<int> saveVector;
+    double pixmapSize = pow(numOfPixels, .5);
+    saveVector.push_back(signed(pixmapSize));
+    saveVector.push_back(signed(pixmapSize));
+    saveVector.push_back(10);
+    saveVector.push_back(signed(currentFrame)+1);
+    saveVector.push_back(10);
+    for(std::vector<Frame*>::iterator it = framesVector.begin(); it != framesVector.end(); ++it )
+    {
+        if((*it)->pixmapVector.size() != 0)
+        {
+            // If user only clicks once, this is the wrong pixmap
+            QPixmap *current = (*it)->pixmapVector.back();
+            QImage currentImage = current->toImage();
+            // loop over the last pixmap in each frame
+            for(int i = 0; i < pixmapSize; i++)
+            {
+                for(int j = 0; j < pixmapSize; j++)
+                {
+                    QRgb pixelColor = currentImage.pixel(static_cast<int>(j*800/pixmapSize+10), static_cast<int>(i*800/pixmapSize+10));
+                    QColor color(pixelColor);
+                    saveVector.push_back(color.red());
+                    saveVector.push_back(color.green());
+                    saveVector.push_back(color.blue());
+                    saveVector.push_back(color.alpha());
+                    saveVector.push_back(10);
+                }
+            }
+        }
+        else
+        {
+            // iterate over a blank pixmap
+        }
+    }
+    emit sendSaveVector(saveVector);
+}
+
+///
+/// \brief Model::storeNumberOfPixels
+/// \param numberOfPixels
+///
+void Model::storeNumberOfPixels(int numberOfPixels)
+{
+    numOfPixels = static_cast<int>(pow(numberOfPixels, 2));
+}
+
+///
+/// \brief Model::openSprite
+/// \param frameQueue
+///
+void Model::openSprite(QQueue<int>* frameQueue)
+{
+    framesVector.clear();
+    emit resetFrameCountFromOpen();
+    int pixmapSize = frameQueue->dequeue();
+    frameQueue->dequeue();
+    int numOfFrames = frameQueue->dequeue();
+    int pixelSize = 800/pixmapSize;
+    for(int i = 0; i < numOfFrames; i++)
+    {
+        Frame* newFrame = new Frame();
+        framesVector.push_back(newFrame);
+        QQueue<int>* newFrameQueue = frameQueue;
+        emit openFrame(newFrameQueue, pixmapSize);
+    }
+}
+
+///
+/// \brief Model::addPixmapFromDuplication
+/// \param newPixmap
+///
+void Model::addPixmapFromDuplication(QPixmap* newPixmap)
+{
+    framesVector.back()->addNewPixmap(newPixmap);
+}
+
+///
+/// \brief Model::duplicateFrame
+///
+void Model::duplicateFrame()
+{
+    Frame* newFrame = new Frame();
+    // add old pixmap
+    QPixmap* newPixmap = framesVector[currentFrame]->duplicate();
+    newFrame->addNewPixmap(newPixmap);
+    framesVector.push_back(newFrame);
+    updateCurrentFrameCounter();
+    emit duplicatedFrameAdded(newPixmap);
 }
 
