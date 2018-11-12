@@ -45,6 +45,7 @@ public slots:
     void initializeLabelFromLoad(int);
     void setIsMirrorDrawing();
     void setIsRectangleDrawing();
+    void removeFrame();
 
 private:
     void mousePressEvent(QMouseEvent *event);

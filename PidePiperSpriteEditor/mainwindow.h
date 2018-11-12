@@ -36,6 +36,7 @@ signals:
     void sliderChanged(int);
     void updateFPSDisplay(int);
     void retrieveAnimationFrameSignal(int);
+    void deleteDrawingWindowFrames();
 
 private slots:
     void addFrameToUi(QPixmap*, int);
@@ -53,6 +54,7 @@ private slots:
     void on_fpsSlider_valueChanged(int value);
     void playAnimation(QPixmap *);
     void getAnimationFrame();
+    void deleteLastPreviewFrame();
 
 private:
     Ui::MainWindow *ui;

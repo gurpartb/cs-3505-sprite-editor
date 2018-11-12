@@ -28,12 +28,10 @@ void Model::currentFrameUpdatePixmap(QPixmap *pixmap)
 ///
 void Model::createNewFrame()
 {
-
     Frame *newFrame = new Frame();
     framesVector.push_back(newFrame);
     currentFrame = static_cast<unsigned int> (framesVector.size()-1);
     emit frameAdded();
-
 }
 
 ///
@@ -193,4 +191,16 @@ void Model::addPixmapFromLoad(QPixmap* newPixmap)
 
 void Model::retrieveFrameForPlayingAnimation(int frameNumber){
     emit sendFrameToAnimationPlayer(framesVector[static_cast<unsigned int> (frameNumber)]->getPixmap());
+}
+void Model::deleteRecentFrame()
+{
+    if(framesVector.size() > 1)
+    {
+        std::cout << "Deleted Frame in Frames Vector" << std::endl;
+        int lastFrame = static_cast<int> (framesVector.size()) - 1;
+        framesVector.erase(framesVector.end() - 1);
+        emit displaySelectedFrameFromPreview(framesVector[static_cast<unsigned int> (lastFrame - 1)]->getPixmap(), static_cast<int> (lastFrame - 1));
+        emit deletePreviewFrame();
+    }
+
 }

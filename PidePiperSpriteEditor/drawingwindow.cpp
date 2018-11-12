@@ -232,7 +232,13 @@ void DrawingWindow::resetFrameCountFromOpen()
 {
     frameCount = 0;
 }
-
+///
+///
+///
+void DrawingWindow::removeFrame()
+{
+    frameCount -= 1;
+}
 ///
 /// \brief DrawingWindow::openingFrame
 /// \param frameQueue
