@@ -47,7 +47,7 @@ private slots:
     void saveAs(std::vector<int>);
     void on_fileSaveAs_triggered();
     void on_fileLoadSprite_triggered();
-    void on_rectangleButton_clicked();
+    //void on_rectangleButton_clicked();
 
     void on_animationSlider_valueChanged(int value);
     void on_fpsSlider_valueChanged(int value);
