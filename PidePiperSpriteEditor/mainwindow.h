@@ -53,6 +53,7 @@ private slots:
     void on_fpsSlider_valueChanged(int value);
     void playAnimation(QPixmap *);
     void getAnimationFrame();
+    void setColorButton(QRgb buttonColor);
 
 private:
     Ui::MainWindow *ui;

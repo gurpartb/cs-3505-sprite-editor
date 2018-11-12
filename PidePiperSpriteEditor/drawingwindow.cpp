@@ -109,10 +109,16 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
     if ((event->button() &Qt::LeftButton) && currentlyDrawing && sizeHasBeenChosen)
     {
         // Save the previous Pixmap so we can undo.
-        if(isRectangleDrawing)
+        if(isColorDropper){
+            QRgb dropperColor(pixMap->toImage().pixel(event->pos().x(), event->pos().y()));
+            setColor(dropperColor);
+            emit setColorButtonUI(dropperColor);
+            setIsColorDropper();
+        } else if(isRectangleDrawing){
             drawRectangle(event->pos());
-        else
+        }else{
             drawPixel(event->pos());
+        }
         emit updatePixmap(pixMap);
         emit updateFramePreview(pixMap);
         currentlyDrawing = false;

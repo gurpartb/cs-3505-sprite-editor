@@ -33,6 +33,7 @@ signals:
     void addDuplicatedPixmap(QPixmap*);
     void addFrameToPreviewOfFrames(QPixmap*, int);
     void addPixmapToFrameFromLoad(QPixmap*);
+    void setColorButtonUI(QRgb);
 
 public slots:
     void frameAdded();
