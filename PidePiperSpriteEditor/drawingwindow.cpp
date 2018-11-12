@@ -14,6 +14,7 @@ DrawingWindow::DrawingWindow(QWidget* parent) : QLabel(parent)
     setPixmap(*pixMap);
     isMirrorDrawing = false;
     isRectangleDrawing = false;
+    isColorDropper = false;
 }
 
 DrawingWindow::~DrawingWindow()
@@ -108,11 +109,11 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
     if ((event->button() &Qt::LeftButton) && currentlyDrawing && sizeHasBeenChosen)
     {
         // Save the previous Pixmap so we can undo.
-        emit updatePixmap(pixMap);
         if(isRectangleDrawing)
             drawRectangle(event->pos());
         else
             drawPixel(event->pos());
+        emit updatePixmap(pixMap);
         emit updateFramePreview(pixMap);
         currentlyDrawing = false;
     }
@@ -183,7 +184,9 @@ void DrawingWindow::drawRectangle(QPoint pos){
         bottomRightY = clickedPoint.y();
     }
     for(int j = 0; j<=int((bottomRightY-topLeftY)/pixelSize); j++){
+
         for(int i = 0; i<=int((bottomRightX-topLeftX)/pixelSize); i++){
+
             QPoint topLeft(topLeftX+pixelSize*i, topLeftY+pixelSize*j);
             drawPixel(topLeft);
         }
@@ -197,6 +200,10 @@ void DrawingWindow::setIsMirrorDrawing()
 
 void DrawingWindow::setIsRectangleDrawing(){
     isRectangleDrawing = !isRectangleDrawing;
+}
+
+void DrawingWindow::setIsColorDropper(){
+    isColorDropper = !isColorDropper;
 }
 
 

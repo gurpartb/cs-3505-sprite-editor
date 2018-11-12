@@ -250,6 +250,11 @@ void MainWindow::on_colorSelectButton_clicked()
     emit changeColor(colorWindow.selectedColor());
 }
 
+// We need signal to boolean in drawing window perhaps
+// Dropper is going to read color from the currentImage at clicked point
+// Udpate the, color in the drawing
+// update the, color in the ui->color button
+
 
 
 //void MainWindow::on_mirrorDrawButton_clicked()

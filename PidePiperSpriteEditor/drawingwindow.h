@@ -45,6 +45,7 @@ public slots:
     void initializeLabelFromLoad(int);
     void setIsMirrorDrawing();
     void setIsRectangleDrawing();
+    void setIsColorDropper();
 
 private:
     void mousePressEvent(QMouseEvent *event);
@@ -75,6 +76,7 @@ private:
     QPoint clickedPoint;
     bool isMirrorDrawing;
     bool isRectangleDrawing;
+    bool isColorDropper;
 };
 
 #endif // DRAWINGWINDOW_H
