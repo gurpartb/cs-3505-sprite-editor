@@ -13,6 +13,7 @@ DrawingWindow::DrawingWindow(QWidget* parent) : QLabel(parent)
     pixMap->fill(Qt::transparent);
     setPixmap(*pixMap);
     isMirrorDrawing = false;
+    isRectangleDrawing = false;
 }
 
 DrawingWindow::~DrawingWindow()
@@ -59,8 +60,6 @@ void DrawingWindow::frameAdded()
     emit updatePixmap(pixMap);
 }
 
-
-
 void DrawingWindow::setColor(QColor givenColor)
 {
     color = givenColor;
@@ -76,8 +75,8 @@ void DrawingWindow::mousePressEvent(QMouseEvent* event)
 {
     if (event->buttons() &Qt::LeftButton && sizeHasBeenChosen)
     {
-        QPoint point(event->pos());
-        clickedPoint = point;
+        //QPoint point(event->pos());
+        clickedPoint = getTopLeftPoint(event->pos());
         currentlyDrawing = true;
     }
 }
@@ -92,7 +91,8 @@ void DrawingWindow::mouseMoveEvent(QMouseEvent *event)
 {
      if ((event->buttons() &Qt::LeftButton) && currentlyDrawing && sizeHasBeenChosen)
      {
-        drawPixel(event->pos());
+         if(!isRectangleDrawing)
+            drawPixel(event->pos());
         std::cout << "mouse move event " << std::endl;
      }
 }
@@ -124,19 +124,20 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
 /// \param Qpoint pos
 ///
 QRectF DrawingWindow::getCurrentPixel(QPoint pos){
-    QPointF topLeft= getTopLeftPoint(pos);
-    // add pixel size to x and y corrdinate to get bottom right
-    QPointF bottomRight(topLeft.x() + pixelSize, topLeft.y() + pixelSize);
-    QRectF pixel(topLeft, bottomRight);
+    QRectF pixel(getTopLeftPoint(pos), getBottomRightPoint(pos));
     return pixel;
 }
 
 QPointF DrawingWindow::getTopLeftPoint(QPoint pos){
-    double topLeftX = floor(pos.x() / pixelSize) * pixelSize;
-    double topLeftY = floor(pos.y() / pixelSize) * pixelSize;
-    std::cout << topLeftX<< std::endl;
-    QPointF topLeft(topLeftX, topLeftY);
+    QPointF topLeft(floor(pos.x() / pixelSize) * pixelSize, floor(pos.y() / pixelSize) * pixelSize);
     return topLeft;
+}
+
+QPointF DrawingWindow::getBottomRightPoint(QPoint pos){
+    QPointF topLeft= getTopLeftPoint(pos);
+    // add pixel size to x and y corrdinate to get bottom right
+    QPointF bottomRight(topLeft.x() + pixelSize, topLeft.y() + pixelSize);
+    return bottomRight;
 }
 
 QRectF DrawingWindow::getMirrorPixel(QPoint currentPoint){
@@ -165,8 +166,8 @@ void DrawingWindow::drawPixel(QPoint pos){
 }
 
 void DrawingWindow::drawRectangle(QPoint pos){
-    // QRectF currentPixel = getCurrentPixel(pos);
-    QRectF pixel(clickedPoint.x(), clickedPoint.y(), pos.x()-clickedPoint.x(), pos.y()-clickedPoint.y());
+    QPointF currentPoint = getBottomRightPoint(pos);
+    QRectF pixel(clickedPoint.x(), clickedPoint.y(), currentPoint.x()-clickedPoint.x(), currentPoint.y()-clickedPoint.y());
     // QRectF pixelMirror = getMirrorPixel(pos);
 
     QPainter painter(pixMap);
@@ -180,8 +181,6 @@ void DrawingWindow::drawRectangle(QPoint pos){
     painter.drawPath(painterPath);
     this->setPixmap(*pixMap);
 }
-
-
 
 void DrawingWindow::setIsMirrorDrawing()
 {

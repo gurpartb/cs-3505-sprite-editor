@@ -58,6 +58,7 @@ private:
     QRectF getCurrentPixel(QPoint pos);
     QRectF getMirrorPixel(QPoint pos);
     QPointF getTopLeftPoint(QPoint pos);
+    QPointF getBottomRightPoint(QPoint pos);
 
     // void findPixelRatio(double currentX, double currentY);
     // void drawPixel();
@@ -72,7 +73,7 @@ private:
     bool sizeHasBeenChosen; //This is a test to check if the user has inputed size of the window before drawing.
 
     QColor color;
-    QPoint clickedPoint;
+    QPointF clickedPoint;
     bool isMirrorDrawing;
     bool isRectangleDrawing;
 };

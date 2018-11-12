@@ -359,10 +359,10 @@ void MainWindow::on_mirrorDrawButton_clicked()
 
 }
 
-void MainWindow::on_rectangleButton_clicked()
-{
+//void MainWindow::on_rectangleButton_clicked()
+//{
 
-}
+//}
 void MainWindow::on_animationSlider_valueChanged(int value)
 {
     std::cout<< value << std::endl;
