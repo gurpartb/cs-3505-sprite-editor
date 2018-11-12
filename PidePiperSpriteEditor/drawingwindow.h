@@ -33,6 +33,7 @@ signals:
     void addDuplicatedPixmap(QPixmap*);
     void addFrameToPreviewOfFrames(QPixmap*, int);
     void addPixmapToFrameFromLoad(QPixmap*);
+    void setColorButtonUI(QRgb);
 
 public slots:
     void frameAdded();
@@ -46,7 +47,7 @@ public slots:
     void setIsMirrorDrawing();
     void setIsRectangleDrawing();
     void removeFrame();
-
+    void setIsColorDropper();
 private:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
@@ -76,6 +77,7 @@ private:
     QPoint clickedPoint;
     bool isMirrorDrawing;
     bool isRectangleDrawing;
+    bool isColorDropper;
 };
 
 #endif // DRAWINGWINDOW_H

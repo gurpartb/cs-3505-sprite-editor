@@ -55,6 +55,7 @@ private slots:
     void playAnimation(QPixmap *);
     void getAnimationFrame();
     void deleteLastPreviewFrame();
+    void setColorButton(QRgb buttonColor);
 
 private:
     Ui::MainWindow *ui;
