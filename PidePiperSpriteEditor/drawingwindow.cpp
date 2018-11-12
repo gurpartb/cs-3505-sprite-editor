@@ -182,26 +182,12 @@ void DrawingWindow::drawRectangle(QPoint pos){
         topLeftY = pos.y();
         bottomRightY = clickedPoint.y();
     }
-
-    QPoint topLeft(topLeftX, topLeftY);
-    QPointF topLeftF= getTopLeftPoint(topLeft);
-
-    QPoint bottomRight(bottomRightX, bottomRightY);
-    QPointF bottomRightF= getBottomRightPoint(bottomRight);
-
-    QRectF pixel(topLeftF.x(), topLeftF.y(), bottomRightF.x() - topLeftF.x(), bottomRightF.y() - topLeft.y() );
-    // QRectF pixelMirror = getMirrorPixel(pos);
-
-    QPainter painter(pixMap);
-    QPainterPath painterPath;
-    QPen pen(color, 1);
-    painter.setPen(pen);
-    painterPath.addRect(pixel);
-    // if(isMirrorDrawing)
-    //     painterPath.addRect(pixelMirror);
-    painter.fillPath(painterPath, color);
-    painter.drawPath(painterPath);
-    this->setPixmap(*pixMap);
+    for(int j = 0; j<=int((bottomRightY-topLeftY)/pixelSize); j++){
+        for(int i = 0; i<=int((bottomRightX-topLeftX)/pixelSize); i++){
+            QPoint topLeft(topLeftX+pixelSize*i, topLeftY+pixelSize*j);
+            drawPixel(topLeft);
+        }
+    }
 }
 
 void DrawingWindow::setIsMirrorDrawing()
