@@ -123,6 +123,8 @@ void MainWindow::on_fileNew_triggered()
 
     int sign = msgBox.exec();
 
+    ui->animationSlider->setValue(0);
+    ui->animationSlider->setMaximum(0);
     if (msgBox.clickedButton()==smallSize)
     {
         emit resetAll();
@@ -148,7 +150,6 @@ void MainWindow::on_fileNew_triggered()
     if(sign != QMessageBox::Cancel) {
         enableUi(true);
     }
-
 }
 
 ///
@@ -176,8 +177,10 @@ void MainWindow::addFrameToUi(QPixmap *pixmap, int frameCount)
     currentSelectedFrame = frameCount;
     std::cout << "MainWindow(addFrameToUi) - Added a frame preview: " << currentSelectedFrame << std::endl;
 
-    ui->animationSlider->setMaximum(frameCount);
-    //ui->animationSlider->setValue(frameCount);
+    ui->animationSlider->setMaximum(static_cast<int> (previewFrameVector.size() - 1));
+    ui->animationSlider->blockSignals(true);
+    ui->animationSlider->setValue(static_cast<int> (previewFrameVector.size() - 1));
+    ui->animationSlider->blockSignals(false);
 }
 ///
 /// \brief MainWindow::deleteRecentPreviewFrame:
@@ -193,6 +196,11 @@ void MainWindow::deleteLastPreviewFrame()
     delete child -> widget();
     std::cout << child << std::endl;
     delete child;
+    int sliderValue = ui->animationSlider->value();
+    if(sliderValue >= static_cast<int> (previewFrameVector.size()))
+    {
+        ui->animationSlider->setValue(static_cast<int> (previewFrameVector.size() - 1));
+    }
     ui->animationSlider->setMaximum(static_cast<int> (previewFrameVector.size() - 1));
     emit deleteDrawingWindowFrames();
 
@@ -365,7 +373,6 @@ void MainWindow::on_mirrorDrawButton_clicked()
 //}
 void MainWindow::on_animationSlider_valueChanged(int value)
 {
-    std::cout<< value << std::endl;
     emit sliderChanged(value);
 }
 
