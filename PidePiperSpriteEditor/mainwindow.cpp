@@ -49,34 +49,39 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     ui->colorSelectButton->setStyleSheet("background-color: rgb(0,0,0,1)");
 
     //Save Connection
-     connect(this, &MainWindow::save, model, &Model::saveAs);
-     connect(model, &Model::sendSaveVector, this, &MainWindow::saveAs);
-     connect(this, &MainWindow::sizeChosen, model, &Model::storeNumberOfPixels);
-     ui->fileSaveAs->setDisabled(true);
+    connect(this, &MainWindow::save, model, &Model::saveAs);
+    connect(model, &Model::sendSaveVector, this, &MainWindow::saveAs);
+    connect(this, &MainWindow::sizeChosen, model, &Model::storeNumberOfPixels);
+    ui->fileSaveAs->setDisabled(true);
 
      //Open Connections
-     connect(this, &MainWindow::openSprite, model, &Model::openSprite);
-     connect(model, &Model::resetFrameCountFromOpen, ui->drawingWindowLabel, &DrawingWindow::resetFrameCountFromOpen);
-     connect(model, &Model::openFrame, ui->drawingWindowLabel, &DrawingWindow::openingFrame);
-     connect(ui->drawingWindowLabel, &DrawingWindow::addDuplicatedPixmap, model, &Model::addPixmapFromDuplication);
-     connect(model, &Model::enableButtonsFromLoad, this, &MainWindow::enableUi);
-     connect(model, &Model::enableButtonsFromLoad, ui->drawingWindowLabel, &DrawingWindow::initializeLabelFromLoad);
-     connect(ui->drawingWindowLabel, &DrawingWindow::addPixmapToFrameFromLoad, model, &Model::addPixmapFromLoad);
+    connect(this, &MainWindow::openSprite, model, &Model::openSprite);
+    connect(model, &Model::resetFrameCountFromOpen, ui->drawingWindowLabel, &DrawingWindow::resetFrameCountFromOpen);
+    connect(model, &Model::openFrame, ui->drawingWindowLabel, &DrawingWindow::openingFrame);
+    connect(ui->drawingWindowLabel, &DrawingWindow::addDuplicatedPixmap, model, &Model::addPixmapFromDuplication);
+    connect(model, &Model::enableButtonsFromLoad, this, &MainWindow::enableUi);
+    connect(model, &Model::enableButtonsFromLoad, ui->drawingWindowLabel, &DrawingWindow::initializeLabelFromLoad);
+    connect(ui->drawingWindowLabel, &DrawingWindow::addPixmapToFrameFromLoad, model, &Model::addPixmapFromLoad);
 
      //Duplicate Connections
-     connect(ui->duplicateButton, &QPushButton::pressed, model, &Model::duplicateFrame);
-     connect(model, &Model::duplicatedFrameAdded, ui->drawingWindowLabel, &DrawingWindow::duplicatedFrame);
-     connect(ui->drawingWindowLabel, &DrawingWindow::addFrameToPreviewOfFrames, this, &MainWindow::addFrameToUi);
+    connect(ui->duplicateButton, &QPushButton::pressed, model, &Model::duplicateFrame);
+    connect(model, &Model::duplicatedFrameAdded, ui->drawingWindowLabel, &DrawingWindow::duplicatedFrame);
+    connect(ui->drawingWindowLabel, &DrawingWindow::addFrameToPreviewOfFrames, this, &MainWindow::addFrameToUi);
 
-     //Mirror Pixel Connections
-     connect(ui->mirrorDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsMirrorDrawing);
+    //Mirror Pixel Connections
+    connect(ui->mirrorDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsMirrorDrawing);
 
-     // Rectangle connection
-     connect(ui->rectangleDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsRectangleDrawing);
+    // Rectangle connection
+    connect(ui->rectangleDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsRectangleDrawing);
     fpsTimer = new QTimer(this);
     connect(fpsTimer, SIGNAL(timeout()), this, SLOT(getAnimationFrame()));
     connect(model, SIGNAL(sendFrameToAnimationPlayer(QPixmap*)), this, SLOT(playAnimation(QPixmap*)));
     connect(this, SIGNAL(retrieveAnimationFrameSignal(int)), model, SLOT(retrieveFrameForPlayingAnimation(int)));
+
+    //Delete Frame Button
+    connect(ui->deleteFrameButton, &QPushButton::pressed, model, &Model::deleteRecentFrame);
+    connect(model, SIGNAL(deletePreviewFrame()), this, SLOT(deleteLastPreviewFrame()));
+    connect(this, SIGNAL(deleteDrawingWindowFrames()), ui->drawingWindowLabel, SLOT(removeFrame()));
 }
 
 MainWindow::~MainWindow()
@@ -175,6 +180,24 @@ void MainWindow::addFrameToUi(QPixmap *pixmap, int frameCount)
     //ui->animationSlider->setValue(frameCount);
 }
 ///
+/// \brief MainWindow::deleteRecentPreviewFrame:
+/// Delets the most recently created frame
+///
+///
+void MainWindow::deleteLastPreviewFrame()
+{
+
+    previewFrameVector.erase(previewFrameVector.end() - 1);
+    QLayoutItem *child;
+    child = ui->frameLayout->takeAt(0);
+    delete child -> widget();
+    std::cout << child << std::endl;
+    delete child;
+    ui->animationSlider->setMaximum(static_cast<int> (previewFrameVector.size() - 1));
+    emit deleteDrawingWindowFrames();
+
+}
+///
 /// \brief MainWindow::
 ///
 /// :
@@ -205,7 +228,6 @@ void MainWindow::resetFramePreview()
 
     int originalScrollAreaHeight = 545;
     ui->scrollAreaWidgetContents->setMinimumHeight(originalScrollAreaHeight);
-
 }
 
 
@@ -349,6 +371,7 @@ void MainWindow::on_animationSlider_valueChanged(int value)
 
 void MainWindow::on_fpsSlider_valueChanged(int value)
 {
+    ui->fpsCountLabel->setText(QString::fromStdString("Frames Per Second: " + std::to_string(value)));
     if(value > 0)
     {
         currentPlayedFrame = 0;
@@ -360,7 +383,6 @@ void MainWindow::on_fpsSlider_valueChanged(int value)
         {
             fpsTimer -> start(int(1000 / value));
         }
-
     }
     else
     {
