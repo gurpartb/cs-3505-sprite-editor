@@ -76,7 +76,7 @@ void DrawingWindow::mousePressEvent(QMouseEvent* event)
     if (event->buttons() &Qt::LeftButton && sizeHasBeenChosen)
     {
         //QPoint point(event->pos());
-        clickedPoint = getTopLeftPoint(event->pos());
+        clickedPoint = event->pos();
         currentlyDrawing = true;
     }
 }
@@ -166,8 +166,30 @@ void DrawingWindow::drawPixel(QPoint pos){
 }
 
 void DrawingWindow::drawRectangle(QPoint pos){
-    QPointF currentPoint = getBottomRightPoint(pos);
-    QRectF pixel(clickedPoint.x(), clickedPoint.y(), currentPoint.x()-clickedPoint.x(), currentPoint.y()-clickedPoint.y());
+    double topLeftX, topLeftY, bottomRightX, bottomRightY;
+    if(clickedPoint.x()<pos.x()){
+        topLeftX = clickedPoint.x();
+        bottomRightX = pos.x();
+    } else {
+        topLeftX = pos.x();
+        bottomRightX = clickedPoint.x();
+    }
+
+    if(clickedPoint.y()<pos.y()){
+        topLeftY = clickedPoint.y();
+        bottomRightY = pos.y();
+    } else {
+        topLeftY = pos.y();
+        bottomRightY = clickedPoint.y();
+    }
+
+    QPoint topLeft(topLeftX, topLeftY);
+    QPointF topLeftF= getTopLeftPoint(topLeft);
+
+    QPoint bottomRight(bottomRightX, bottomRightY);
+    QPointF bottomRightF= getBottomRightPoint(bottomRight);
+
+    QRectF pixel(topLeftF.x(), topLeftF.y(), bottomRightF.x() - topLeftF.x(), bottomRightF.y() - topLeft.y() );
     // QRectF pixelMirror = getMirrorPixel(pos);
 
     QPainter painter(pixMap);
@@ -190,6 +212,7 @@ void DrawingWindow::setIsMirrorDrawing()
 void DrawingWindow::setIsRectangleDrawing(){
     isRectangleDrawing = !isRectangleDrawing;
 }
+
 
 void DrawingWindow::undo(QPixmap* map)
 {

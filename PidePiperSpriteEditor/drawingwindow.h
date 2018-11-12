@@ -72,7 +72,7 @@ private:
     bool sizeHasBeenChosen; //This is a test to check if the user has inputed size of the window before drawing.
 
     QColor color;
-    QPointF clickedPoint;
+    QPoint clickedPoint;
     bool isMirrorDrawing;
     bool isRectangleDrawing;
 };
