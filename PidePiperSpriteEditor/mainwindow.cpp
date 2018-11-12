@@ -71,8 +71,14 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     //Mirror Pixel Connections
     connect(ui->mirrorDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsMirrorDrawing);
 
+
     // Rectangle connection
     connect(ui->rectangleDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsRectangleDrawing);
+
+     // Dropper connection
+     connect(ui->colorDropperButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsColorDropper);
+     connect(ui->drawingWindowLabel, &DrawingWindow::setColorButtonUI, this, &MainWindow::setColorButton);
+
     fpsTimer = new QTimer(this);
     connect(fpsTimer, SIGNAL(timeout()), this, SLOT(getAnimationFrame()));
     connect(model, SIGNAL(sendFrameToAnimationPlayer(QPixmap*)), this, SLOT(playAnimation(QPixmap*)));
@@ -98,7 +104,7 @@ void MainWindow::enableUi(bool enabled)
     ui->drawingWindowLabel->setEnabled(enabled);
     ui->drawButton->setEnabled(enabled);
     ui->eraseButton->setEnabled(enabled);
-    ui->colorDropButton->setEnabled(enabled);
+    ui->colorDropperButton->setEnabled(enabled);
     ui->mirrorDrawButton->setEnabled(enabled);
     ui->undoButton->setEnabled(enabled);
     ui->duplicateButton->setEnabled(enabled);
@@ -272,7 +278,15 @@ void MainWindow::on_colorSelectButton_clicked()
     emit changeColor(colorWindow.selectedColor());
 }
 
-
+// We need signal to boolean in drawing window perhaps
+// Dropper is going to read color from the currentImage at clicked point
+// Udpate the, color in the drawing
+// update the, color in the ui->color button
+void MainWindow::setColorButton(QRgb buttonColor){
+    // emit changeColor(buttonColor);
+    QColor colorButton(buttonColor);
+    ui->colorSelectButton->setStyleSheet("background-color: " + colorButton.name());
+}
 
 //void MainWindow::on_mirrorDrawButton_clicked()
 //{
