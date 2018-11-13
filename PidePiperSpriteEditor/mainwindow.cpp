@@ -111,6 +111,8 @@ void MainWindow::enableUi(bool enabled)
     ui->addFrameButton->setEnabled(enabled);
     ui->colorSelectButton->setEnabled(enabled);
     ui->fileSaveAs->setEnabled(enabled);
+    ui->rectangleDrawButton->setEnabled(enabled);
+    ui->deleteFrameButton->setEnabled(enabled);
 }
 
 ///
