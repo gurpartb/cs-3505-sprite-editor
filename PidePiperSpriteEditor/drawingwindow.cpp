@@ -299,7 +299,6 @@ void DrawingWindow::openingFrame(QQueue<int>* frameQueue, int pixmapSize)
     displaySelectedFrameFromPreview(newPixmap, frameCount);
     emit addPixmapToFrameFromLoad(newPixmap);
     emit addFrameToPreviewOfFrames(newPixmap, frameCount);
-    emit saveCurrentFrame(newPixmap);
     frameCount++;
 }
 
