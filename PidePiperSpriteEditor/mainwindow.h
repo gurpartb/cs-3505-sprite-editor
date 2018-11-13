@@ -36,6 +36,7 @@ signals:
     void sliderChanged(int);
     void updateFPSDisplay(int);
     void retrieveAnimationFrameSignal(int);
+    void exportGifSignal(const char*);
 
 private slots:
     void addFrameToUi(QPixmap*, int);
@@ -53,6 +54,8 @@ private slots:
     void on_fpsSlider_valueChanged(int value);
     void playAnimation(QPixmap *);
     void getAnimationFrame();
+
+    void on_fileExportGif_triggered();
 
 private:
     Ui::MainWindow *ui;

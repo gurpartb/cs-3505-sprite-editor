@@ -5,6 +5,7 @@
 #include "frame.h"
 #include <QQueue>
 
+
 class Model : public QObject
 {
     Q_OBJECT
@@ -28,6 +29,7 @@ public slots:
     void duplicateFrame();
     void addPixmapFromLoad(QPixmap*);
     void retrieveFrameForPlayingAnimation(int);
+    void exportGifFromFrames(const char*);
 
 signals:
     void frameAdded();

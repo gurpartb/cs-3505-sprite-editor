@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include<QFileDialog>
+#include<QInputDialog>
 #include<QTextStream>
 
 ///
@@ -77,6 +78,9 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(fpsTimer, SIGNAL(timeout()), this, SLOT(getAnimationFrame()));
     connect(model, SIGNAL(sendFrameToAnimationPlayer(QPixmap*)), this, SLOT(playAnimation(QPixmap*)));
     connect(this, SIGNAL(retrieveAnimationFrameSignal(int)), model, SLOT(retrieveFrameForPlayingAnimation(int)));
+
+    //Export Gif connection
+    connect(this, SIGNAL(exportGifSignal(const char*)), model, SLOT(exportGifFromFrames(const char*)));
 }
 
 MainWindow::~MainWindow()
@@ -366,4 +370,18 @@ void MainWindow::on_fpsSlider_valueChanged(int value)
     {
         fpsTimer -> stop();
     }
+}
+
+void MainWindow::on_fileExportGif_triggered()
+{
+     QInputDialog input;
+     input.setLabelText("Enter what you would like to name the gif file:");
+     int sign = input.exec();
+     QByteArray byteArray = input.textValue().toLocal8Bit();
+
+     if(sign != QDialog::Rejected) {
+         emit exportGifSignal(byteArray.data());
+     }
+
+
 }

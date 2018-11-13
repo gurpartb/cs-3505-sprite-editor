@@ -1,5 +1,7 @@
 #include "model.h"
 #include<math.h>
+#include "gif.h"
+#include <QBuffer>
 
 Model::Model()
 {
@@ -193,4 +195,19 @@ void Model::addPixmapFromLoad(QPixmap* newPixmap)
 
 void Model::retrieveFrameForPlayingAnimation(int frameNumber){
     emit sendFrameToAnimationPlayer(framesVector[static_cast<unsigned int> (frameNumber)]->getPixmap());
+}
+
+void Model::exportGifFromFrames(const char* fileName) {
+    GifWriter gifWriter;
+    GifBegin(&gifWriter, fileName, 800, 800,
+            10, framesVector[0]->getPixmap()->depth(), false);
+    //Convert Qpixmap frames to uint8_t* then add into Gif
+    for(unsigned long i = 0; i < framesVector.size(); i++) {
+        QPixmap* pixMap = framesVector[i]->getPixmap();
+        pixMap->scaled(800, 800);
+        QImage image = pixMap->toImage().convertToFormat(QImage::Format_RGBA8888);
+        GifWriteFrame(&gifWriter, image.bits(), 800, 800, 10, 8, false);
+    }
+    GifEnd(&gifWriter);
+
 }
