@@ -42,7 +42,7 @@ void DrawingWindow::userChoseSize(int size)
     pixMap->fill(Qt::transparent);
     this->setPixmap(*pixMap);
     emit createdInitialFrame();
-    emit saveCurrentFrame(pixMap);
+    //emit saveCurrentFrame(pixMap);
     std::cout << "Chose size: " << size << std::endl;
     pixelSize = windowSize / size;
     sizeHasBeenChosen = true;
@@ -299,7 +299,7 @@ void DrawingWindow::openingFrame(QQueue<int>* frameQueue, int pixmapSize)
     displaySelectedFrameFromPreview(newPixmap, frameCount);
     emit addPixmapToFrameFromLoad(newPixmap);
     emit addFrameToPreviewOfFrames(newPixmap, frameCount);
-    //emit saveCurrentFrame(newPixmap);
+    emit saveCurrentFrame(newPixmap);
     frameCount++;
 }
 

@@ -27,7 +27,8 @@ void Frame::addNewPixmap(QPixmap *pixmap)
 
 void Frame::addPixmapFromLoad(QPixmap *pixmap)
 {
-    pixmapVector.push_back(pixmap);
+    //pixmapVector.push_back(pixmap);
+    *currentMap = pixmap->copy();
 }
 
 ///
