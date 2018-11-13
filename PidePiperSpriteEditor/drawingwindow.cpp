@@ -59,6 +59,7 @@ void DrawingWindow::frameAdded()
     currentFrameSelected = frameCount;
     emit addFrameToUi(pixMap, frameCount);
     emit updatePixmap(pixMap);
+    emit saveCurrentFrame(pixMap);
 }
 
 void DrawingWindow::setColor(QColor givenColor)
@@ -76,8 +77,8 @@ void DrawingWindow::mousePressEvent(QMouseEvent* event)
 {
     if (event->buttons() &Qt::LeftButton && sizeHasBeenChosen)
     {
-        //QPoint point(event->pos());
         clickedPoint = event->pos();
+        emit updatePixmap(pixMap);//save the last instance of the map for undo
         currentlyDrawing = true;
     }
 }
@@ -119,7 +120,9 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
         }else{
             drawPixel(event->pos());
         }
-        emit updatePixmap(pixMap);
+        //emit updatePixmap(pixMap);
+
+        emit saveCurrentFrame(pixMap);//saves the current frame being displayed after drawing
         emit updateFramePreview(pixMap);
         currentlyDrawing = false;
     }
@@ -212,12 +215,17 @@ void DrawingWindow::setIsColorDropper(){
     isColorDropper = !isColorDropper;
 }
 
-
+///
+/// \brief DrawingWindow::undo
+/// \param map Last map from the current frame
+/// Slot received from the model class
+/// displays the pixmap received from the model
+///
 void DrawingWindow::undo(QPixmap* map)
 {
     if(map == nullptr){
-        std::cout <<"Nothing left to undo" << '\n';
-        return;
+
+        return;//TODO: deletes current frame and moves back one frame
     }
     pixMap = new QPixmap(*map);
     this->setPixmap(*pixMap);
@@ -233,7 +241,7 @@ void DrawingWindow::displaySelectedFrameFromPreview(QPixmap *framePreviewPixmap,
 {
     currentFrameSelected = frameSelected;
     std::cout << "DrawingWindow(displaySelected) - Updating main Pixmap from frame preview: " << currentFrameSelected << std::endl;
-    *this->pixMap = *framePreviewPixmap;
+    *this->pixMap = framePreviewPixmap->copy();
     this->setPixmap(*pixMap);
 }
 
@@ -289,6 +297,7 @@ void DrawingWindow::openingFrame(QQueue<int>* frameQueue, int pixmapSize)
     displaySelectedFrameFromPreview(newPixmap, frameCount);
     emit addPixmapToFrameFromLoad(newPixmap);
     emit addFrameToPreviewOfFrames(newPixmap, frameCount);
+    emit saveCurrentFrame(newPixmap);
     frameCount++;
 }
 
@@ -301,4 +310,6 @@ void DrawingWindow::duplicatedFrame(QPixmap* newPixmap){
     setPixmap(*newPixmap);
     displaySelectedFrameFromPreview(newPixmap, frameCount);
     emit addFrameToPreviewOfFrames(newPixmap, frameCount);
+    emit saveCurrentFrame(newPixmap);
+
 }

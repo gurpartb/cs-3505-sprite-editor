@@ -29,6 +29,7 @@ public slots:
     void addPixmapFromLoad(QPixmap*);
     void retrieveFrameForPlayingAnimation(int);
     void deleteRecentFrame();
+    void saveCurrentFrame(QPixmap*);
 
 signals:
     void frameAdded();

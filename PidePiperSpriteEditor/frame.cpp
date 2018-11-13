@@ -3,7 +3,7 @@
 
 Frame::Frame() : pixmapVector()
 {
-
+ currentMap  = new QPixmap();
 }
 
 ///
@@ -38,10 +38,15 @@ void Frame::addPixmapFromLoad(QPixmap *pixmap)
 ///
 QPixmap* Frame::getPixmap()
 {
-    std::cout << "Frame(getPixmap) - returning pixmap: " << pixmapVector.back() << std::endl;
-    return pixmapVector.back();
+    std::cout << "Frame(getPixmap) - returning pixmap: " << currentMap << std::endl;
+    return currentMap;
 }
-
+///
+/// \brief Frame::undo
+/// \return QPixmap
+/// returns pops off last pixmap in frame
+/// sets current map to the last map
+///
 QPixmap* Frame::undo()
 {
     if(pixmapVector.size() == 0)
@@ -50,6 +55,7 @@ QPixmap* Frame::undo()
     }
     QPixmap *lastMap = pixmapVector.back();
     pixmapVector.pop_back();
+    *currentMap  = lastMap->copy();
     return lastMap;
 }
 
@@ -59,6 +65,6 @@ QPixmap* Frame::undo()
 ///
 QPixmap* Frame::duplicate()
 {
-    QPixmap* newPixmap = new QPixmap(*pixmapVector.back());
+    QPixmap* newPixmap = new QPixmap(*currentMap);
     return newPixmap;
 }

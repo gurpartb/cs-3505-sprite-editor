@@ -30,11 +30,14 @@ signals:
     void addFrameToUi(QPixmap*, int);
     void updateFramePreview(QPixmap*);
     void enableUiSignal(bool);
+    // head
     void addDuplicatedPixmap(QPixmap*);
     void addFrameToPreviewOfFrames(QPixmap*, int);
     void addPixmapToFrameFromLoad(QPixmap*);
     void setColorButtonUI(QRgb);
-
+    //
+    void saveCurrentFrame(QPixmap*);
+    // undo3
 public slots:
     void frameAdded();
     void undo(QPixmap*);

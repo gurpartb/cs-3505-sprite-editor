@@ -30,6 +30,7 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     //DrawingWindow and Model connections
     connect(ui->drawingWindowLabel, &DrawingWindow::updatePixmap, model, &Model::currentFrameUpdatePixmap);
     connect(ui->drawingWindowLabel, &DrawingWindow::createdInitialFrame, model, &Model::createNewFrame);
+    connect(ui->drawingWindowLabel, &DrawingWindow::saveCurrentFrame, model, &Model::saveCurrentFrame);
 
     //UI to Model connections
     connect(ui->addFrameButton, &QPushButton::pressed, model, &Model::updateCurrentFrameCounter);
@@ -111,6 +112,8 @@ void MainWindow::enableUi(bool enabled)
     ui->addFrameButton->setEnabled(enabled);
     ui->colorSelectButton->setEnabled(enabled);
     ui->fileSaveAs->setEnabled(enabled);
+    ui->rectangleDrawButton->setEnabled(enabled);
+    ui->deleteFrameButton->setEnabled(enabled);
 }
 
 ///
@@ -348,6 +351,7 @@ void MainWindow::saveAs(std::vector<int> saveVector)
 void MainWindow::on_fileLoadSprite_triggered()
 {
     previewFrameVector.clear(); // memery leaks
+    // resetFramePreview();
     QQueue<int>* openQueue = new QQueue<int>;
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Open Sprite"), "",
