@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>addframe.png</file>
+        <file>dropper.png</file>
+	<file>duplicate.png</file>
+	<file>edited pipey.png</file>
+	<file>eraser.png</file>
+	<file>images.png</file>
+	<file>Logo.png</file>
+	<file>mainscreen.png</file>
+	<file>mirror.png</file>
+        <file>pen.png</file>
+        <file>rectangle.png</file>
+        <file>trash.png</file>
+        <file>undo.png</file>
+    </qresource>
+</RCC>
