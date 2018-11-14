@@ -32,7 +32,7 @@ signals:
     void mirrorDrawButtonClicked();
     void save();
     void sizeChosen(int);
-    void openSprite(QQueue<int>*);
+    void openSprite(QQueue<int>*, int sizes, int numframes);
     void sliderChanged(int);
     void updateFPSDisplay(int);
     void retrieveAnimationFrameSignal(int);

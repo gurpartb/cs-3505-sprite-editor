@@ -51,6 +51,8 @@ public slots:
     void setIsRectangleDrawing();
     void removeFrame();
     void setIsColorDropper();
+    void setIsEraser();
+
 private:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
@@ -81,6 +83,7 @@ private:
     bool isMirrorDrawing;
     bool isRectangleDrawing;
     bool isColorDropper;
+    bool isEraser;
 };
 
 #endif // DRAWINGWINDOW_H

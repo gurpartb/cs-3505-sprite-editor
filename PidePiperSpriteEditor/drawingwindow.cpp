@@ -216,6 +216,10 @@ void DrawingWindow::setIsColorDropper(){
     isColorDropper = !isColorDropper;
 }
 
+void DrawingWindow::setIsEraser(){
+    color = Qt::white;
+}
+
 ///
 /// \brief DrawingWindow::undo
 /// \param map Last map from the current frame
@@ -244,7 +248,6 @@ void DrawingWindow::displaySelectedFrameFromPreview(QPixmap *framePreviewPixmap,
     std::cout << "DrawingWindow(displaySelected) - Updating main Pixmap from frame preview: " << currentFrameSelected << std::endl;
     *this->pixMap = framePreviewPixmap->copy();
     this->setPixmap(*pixMap);
-    emit saveCurrentFrame(pixMap);
 }
 
 ///
@@ -261,7 +264,7 @@ void DrawingWindow::resetFrameCount()
 ///
 void DrawingWindow::resetFrameCountFromOpen()
 {
-    frameCount = 0;
+    frameCount = -1;
 }
 ///
 ///
@@ -288,18 +291,19 @@ void DrawingWindow::openingFrame(QQueue<int>* frameQueue, int pixmapSize)
             int blue = frameQueue->dequeue();
             int alpha = frameQueue->dequeue();
             QColor loadColor(red, green, blue, alpha);
-            QPoint loadPoint(j*windowSize/pixmapSize, i*windowSize/pixmapSize);
+            QPoint loadPoint(i*windowSize/pixmapSize,j*windowSize/pixmapSize);
             color = loadColor;
             isMirrorDrawing = false;
+            sizeHasBeenChosen = true;
             drawPixel(loadPoint);
         }
     }
+    frameCount++;
     setPixmap(*pixMap);
     QPixmap* newPixmap = new QPixmap(*pixMap);
     displaySelectedFrameFromPreview(newPixmap, frameCount);
     emit addPixmapToFrameFromLoad(newPixmap);
     emit addFrameToPreviewOfFrames(newPixmap, frameCount);
-    frameCount++;
 }
 
 ///

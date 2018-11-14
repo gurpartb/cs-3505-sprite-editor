@@ -80,6 +80,9 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
      connect(ui->colorDropperButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsColorDropper);
      connect(ui->drawingWindowLabel, &DrawingWindow::setColorButtonUI, this, &MainWindow::setColorButton);
 
+     // Eraser connection
+     connect(ui->eraseButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsEraser);
+
     fpsTimer = new QTimer(this);
     connect(fpsTimer, SIGNAL(timeout()), this, SLOT(getAnimationFrame()));
     connect(model, SIGNAL(sendFrameToAnimationPlayer(QPixmap*)), this, SLOT(playAnimation(QPixmap*)));
@@ -334,7 +337,7 @@ void MainWindow::saveAs(std::vector<int> saveVector)
         //out.setVersion(QDataStream::Qt_4_5);
         for(std::vector<int>::iterator it = saveVector.begin(); it != saveVector.end(); ++it )
         {
-            if(*it == 10)
+            if(*it == -1)
             {
                 out<<endl;
                 continue;
@@ -350,26 +353,37 @@ void MainWindow::saveAs(std::vector<int> saveVector)
 ///
 void MainWindow::on_fileLoadSprite_triggered()
 {
-    previewFrameVector.clear(); // memery leaks
-    // resetFramePreview();
+    resetFramePreview();
     QQueue<int>* openQueue = new QQueue<int>;
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Open Sprite"), "",
         tr("Sprite (*.ssp);;All Files (*)"));
+    int numOfPixels, numOfFrames;
 
     if (fileName.isEmpty())
+    {
            return;
-       else {
+    }
+    else
+    {
 
            QFile file(fileName);
 
-           if (!file.open(QIODevice::ReadOnly)) {
+           if (!file.open(QIODevice::ReadOnly))
+           {
                QMessageBox::information(this, tr("Unable to open file"),
                    file.errorString());
                return;
            }
 
            QTextStream in(&file);
+           QString line1 = in.readLine();
+           QStringList sizes = line1.split(" ");
+           numOfPixels = sizes[0].toInt();
+
+           QString line2 = in.readLine();
+           QStringList frames = line2.split(" ");
+           numOfFrames = frames[0].toInt();
            QString content = in.readAll();
            QStringList data = content.split(" ");
            for(const auto& i : data)
@@ -377,7 +391,7 @@ void MainWindow::on_fileLoadSprite_triggered()
                openQueue->enqueue(i.toInt());
            }
        }
-    emit openSprite(openQueue);
+    emit openSprite(openQueue,numOfPixels,numOfFrames);
 }
 
 void MainWindow::on_mirrorDrawButton_clicked()

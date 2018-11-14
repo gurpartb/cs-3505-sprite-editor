@@ -110,34 +110,28 @@ void Model::saveAs()
     double pixmapSize = pow(numOfPixels, .5);
     saveVector.push_back(signed(pixmapSize));
     saveVector.push_back(signed(pixmapSize));
-    saveVector.push_back(10);
+    saveVector.push_back(-1);
     saveVector.push_back(signed(currentFrame)+1);
-    saveVector.push_back(10);
+    saveVector.push_back(-1);
     for(std::vector<Frame*>::iterator it = framesVector.begin(); it != framesVector.end(); ++it )
     {
-        if((*it)->pixmapVector.size() != 0)
-        {
-            QPixmap *current = (*it)->pixmapVector.back();
+            QPixmap *current = (*it)->currentMap;
             QImage currentImage = current->toImage();
 
             for(int i = 0; i < pixmapSize; i++)
             {
                 for(int j = 0; j < pixmapSize; j++)
                 {
-                    QRgb pixelColor = currentImage.pixel(static_cast<int>(j*800/pixmapSize+10), static_cast<int>(i*800/pixmapSize+10));
-                    QColor color(pixelColor);
-                    saveVector.push_back(color.red());
-                    saveVector.push_back(color.green());
-                    saveVector.push_back(color.blue());
-                    saveVector.push_back(color.alpha());
-                    saveVector.push_back(10);
+                    QRgb pixelColor = currentImage.pixel(static_cast<int>(i*800/pixmapSize+10), static_cast<int>(j*800/pixmapSize+10));
+                    //QColor color(pixelColor);
+                    saveVector.push_back(qRed(pixelColor));
+                    saveVector.push_back(qGreen(pixelColor));
+                    saveVector.push_back(qBlue(pixelColor));
+                    saveVector.push_back(qAlpha(pixelColor)); //delete dis
+                    //saveVector.push_back(10);
                 }
+                saveVector.push_back(-1);
             }
-        }
-        else
-        {
-            // iterate over a blank pixmap
-        }
     }
     emit sendSaveVector(saveVector);
    // createNewFrame();
@@ -156,15 +150,14 @@ void Model::storeNumberOfPixels(int numberOfPixels)
 /// \brief Model::openSprite
 /// \param frameQueue
 ///
-void Model::openSprite(QQueue<int>* frameQueue)
+void Model::openSprite(QQueue<int>* frameQueue, int numOfPixels, int numOfFrames)
 {
-    framesVector.clear(); // memory leaks
-    currentFrame = 0;
+    resetAll();
     emit resetFrameCountFromOpen();
-    numOfPixels = frameQueue->dequeue();
-    frameQueue->dequeue();
+    //numOfPixels = frameQueue->dequeue();
+    //frameQueue->dequeue();
     emit enableButtonsFromLoad(numOfPixels);
-    int numOfFrames = frameQueue->dequeue();
+   //  int numOfFrames = frameQueue->dequeue();
     for(int i = 0; i < numOfFrames; i++)
     {
         Frame* newFrame = new Frame();

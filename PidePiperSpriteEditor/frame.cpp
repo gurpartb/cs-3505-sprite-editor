@@ -20,8 +20,7 @@ void Frame::addNewPixmap(QPixmap *pixmap)
     else
     {
         QPixmap *savePixmap = new QPixmap(*pixmap);
-        //pixmapVector.push_back(savePixmap);
-        currentMap = savePixmap;
+        pixmapVector.push_back(savePixmap);
     }
 
 }

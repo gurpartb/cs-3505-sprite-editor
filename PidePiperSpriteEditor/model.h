@@ -23,7 +23,7 @@ public slots:
     void retrieveFrameNumberFromClickedPreview(int);
     void saveAs();
     void storeNumberOfPixels(int);
-    void openSprite(QQueue<int>*);
+    void openSprite(QQueue<int>*, int numOfPixels, int numOfFrames);
     void addPixmapFromDuplication(QPixmap*);
     void duplicateFrame();
     void addPixmapFromLoad(QPixmap*);
