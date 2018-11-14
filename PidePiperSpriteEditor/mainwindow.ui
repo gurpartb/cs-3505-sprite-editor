@@ -404,7 +404,7 @@ border-image: url(:/mainscreen.png) 0 0 0 0 stretch stretch;</string>
          </size>
         </property>
         <property name="styleSheet">
-         <string notr="true">border: 1px solid black;</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -414,7 +414,7 @@ border-image: url(:/mainscreen.png) 0 0 0 0 stretch stretch;</string>
       <item>
        <widget class="QLabel" name="fpsCountLabel">
         <property name="text">
-         <string>TextLabel</string>
+         <string>FPS</string>
         </property>
        </widget>
       </item>
@@ -529,7 +529,6 @@ border-image: url(:/mainscreen.png) 0 0 0 0 stretch stretch;</string>
     <addaction name="fileSaveAs"/>
     <addaction name="fileLoadSprite"/>
     <addaction name="fileExportGif"/>
-    <addaction name="filePreviewGif"/>
     <addaction name="fileClose"/>
    </widget>
    <addaction name="menuFile"/>

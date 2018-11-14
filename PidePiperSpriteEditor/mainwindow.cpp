@@ -15,7 +15,7 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     ui->setupUi(this);
     ui->scrollArea->setWidgetResizable(true);
 
-    setWindowIcon(QIcon(":/Logo.png"));
+    setWindowIcon(QIcon(":/pplogo.jpg"));
 
     //Disable Ui until user sets size.
     enableUi(false);

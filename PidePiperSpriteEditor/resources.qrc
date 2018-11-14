@@ -13,5 +13,6 @@
         <file>rectangle.png</file>
         <file>trash.png</file>
         <file>undo.png</file>
+	<file>pplogo.jpg</file>
     </qresource>
 </RCC>
