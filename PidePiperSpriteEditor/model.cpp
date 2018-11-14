@@ -2,7 +2,12 @@
 #include<math.h>
 #include "gif.h"
 #include <QBuffer>
-
+///
+/// \brief Model::Model
+/// This model class communicates with the drawing window and the main window
+/// and acts as a container for the each frame of the current sprite being edited
+/// Stores each frames as an object in a frame vector class
+///
 Model::Model()
 {
 
@@ -106,20 +111,22 @@ void Model::saveCurrentFrame(QPixmap* map)
 
 ///
 /// \brief Model::saveAs
+/// Stores the information of the current sprite into an integer vector
 ///
 void Model::saveAs()
 {
     std::vector<int> saveVector;
     double pixmapSize = pow(numOfPixels, .5);
+    //push back height and width of the frame
     saveVector.push_back(signed(pixmapSize));
     saveVector.push_back(signed(pixmapSize));
-    saveVector.push_back(-1);
+    saveVector.push_back(-1);//negative one will represent new lines for the ascii file
     saveVector.push_back(signed(currentFrame)+1);
     saveVector.push_back(-1);
     for(std::vector<Frame*>::iterator it = framesVector.begin(); it != framesVector.end(); ++it )
     {
             QPixmap *current = (*it)->currentMap;
-            QImage currentImage = current->toImage();
+            QImage currentImage = current->toImage();//convert Qpixmap to QImage to retreiving rgba values
 
             for(int i = 0; i < pixmapSize; i++)
             {
@@ -134,12 +141,13 @@ void Model::saveAs()
                 saveVector.push_back(-1);
             }
     }
-    emit sendSaveVector(saveVector);
+    emit sendSaveVector(saveVector);//send info to be written in mainwindow
 }
 
 ///
 /// \brief Model::storeNumberOfPixels
 /// \param numberOfPixels
+/// Computes and stores the number of pixels for the current sprite
 ///
 void Model::storeNumberOfPixels(int numberOfPixels)
 {
@@ -148,11 +156,15 @@ void Model::storeNumberOfPixels(int numberOfPixels)
 
 ///
 /// \brief Model::openSprite
+/// /// creates frames for new loaded sprite
+/// Erases all info stored in frames vector and creates frames for the new
+/// sprite being loaded in
 /// \param frameQueue
+/// the frames loaded in from the .ssp file
 ///
 void Model::openSprite(QQueue<int>* frameQueue, int numOfPixels, int numOfFrames)
 {
-    resetAll();
+    resetAll();//resets any information stored in the frames vector
     emit resetFrameCountFromOpen();
     emit enableButtonsFromLoad(numOfPixels);
     for(int i = 0; i < numOfFrames; i++)
@@ -166,7 +178,9 @@ void Model::openSprite(QQueue<int>* frameQueue, int numOfPixels, int numOfFrames
 
 ///
 /// \brief Model::addPixmapFromDuplication
+/// Duplicates passed int pixmap and pushes it onto the end of the vector
 /// \param newPixmap
+/// the new pixmap to be added
 ///
 void Model::addPixmapFromDuplication(QPixmap* newPixmap)
 {
@@ -175,6 +189,7 @@ void Model::addPixmapFromDuplication(QPixmap* newPixmap)
 
 ///
 /// \brief Model::duplicateFrame
+/// Duplicates the curent selected frame
 ///
 void Model::duplicateFrame()
 {
@@ -187,16 +202,28 @@ void Model::duplicateFrame()
     emit duplicatedFrameAdded(newPixmap);
 }
 
-
+///
+/// \brief Model::addPixmapFromLoad
+/// \param newPixmap
+///
+///
 void Model::addPixmapFromLoad(QPixmap* newPixmap)
 {
     framesVector.back()->addPixmapFromLoad(newPixmap);
 }
-
+///
+/// \brief Model::retrieveFrameForPlayingAnimation
+/// \param frameNumber
+/// gets the frame from the vector at the passed in index and sends it to drawing window
+///
 void Model::retrieveFrameForPlayingAnimation(int frameNumber){
     emit sendFrameToAnimationPlayer(framesVector[static_cast<unsigned int> (frameNumber)]->getPixmap());
 }
-
+///
+/// \brief Model::deleteRecentFrame
+/// Deletest he last frame stored in the frames vector
+///
+///
 void Model::deleteRecentFrame()
 {
     if(framesVector.size() > 1)
@@ -208,7 +235,12 @@ void Model::deleteRecentFrame()
         emit deletePreviewFrame();
     }
 }
-
+///
+/// \brief Model::exportGifFromFrames
+/// Writes the information from the pixmaps stored in each frame into gif format
+/// \param fileName
+/// The name of the file being written to
+///
 void Model::exportGifFromFrames(const char* fileName) {
     GifWriter gifWriter;
     GifBegin(&gifWriter, fileName, 800, 800,
