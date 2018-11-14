@@ -68,7 +68,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="colorDropperButton">
+       <widget class="QPushButton" name="colorDropButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>

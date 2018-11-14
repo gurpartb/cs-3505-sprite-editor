@@ -37,6 +37,8 @@ signals:
     void updateFPSDisplay(int);
     void retrieveAnimationFrameSignal(int);
     void deleteDrawingWindowFrames();
+    void exportGifSignal(const char*);
+
 
 private slots:
     void addFrameToUi(QPixmap*, int);
@@ -56,6 +58,8 @@ private slots:
     void getAnimationFrame();
     void deleteLastPreviewFrame();
     void setColorButton(QRgb buttonColor);
+
+    void on_fileExportGif_triggered();
 
 private:
     Ui::MainWindow *ui;

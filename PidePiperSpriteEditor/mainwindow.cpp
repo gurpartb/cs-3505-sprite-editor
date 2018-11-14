@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include<QFileDialog>
+#include<QInputDialog>
 #include<QTextStream>
 
 ///
@@ -76,7 +77,7 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(ui->rectangleDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsRectangleDrawing);
 
      // Dropper connection
-     connect(ui->colorDropperButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsColorDropper);
+     connect(ui->colorDropButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsColorDropper);
      connect(ui->drawingWindowLabel, &DrawingWindow::setColorButtonUI, this, &MainWindow::setColorButton);
 
     fpsTimer = new QTimer(this);
@@ -84,10 +85,15 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(model, SIGNAL(sendFrameToAnimationPlayer(QPixmap*)), this, SLOT(playAnimation(QPixmap*)));
     connect(this, SIGNAL(retrieveAnimationFrameSignal(int)), model, SLOT(retrieveFrameForPlayingAnimation(int)));
 
+
     //Delete Frame Button
     connect(ui->deleteFrameButton, &QPushButton::pressed, model, &Model::deleteRecentFrame);
     connect(model, SIGNAL(deletePreviewFrame()), this, SLOT(deleteLastPreviewFrame()));
     connect(this, SIGNAL(deleteDrawingWindowFrames()), ui->drawingWindowLabel, SLOT(removeFrame()));
+
+    //Export Gif connection
+    connect(this, SIGNAL(exportGifSignal(const char*)), model, SLOT(exportGifFromFrames(const char*)));
+
 }
 
 MainWindow::~MainWindow()
@@ -104,7 +110,7 @@ void MainWindow::enableUi(bool enabled)
     ui->drawingWindowLabel->setEnabled(enabled);
     ui->drawButton->setEnabled(enabled);
     ui->eraseButton->setEnabled(enabled);
-    ui->colorDropperButton->setEnabled(enabled);
+    ui->colorDropButton->setEnabled(enabled);
     ui->mirrorDrawButton->setEnabled(enabled);
     ui->undoButton->setEnabled(enabled);
     ui->duplicateButton->setEnabled(enabled);
@@ -411,4 +417,18 @@ void MainWindow::on_fpsSlider_valueChanged(int value)
     {
         fpsTimer -> stop();
     }
+}
+
+void MainWindow::on_fileExportGif_triggered()
+{
+     QInputDialog input;
+     input.setLabelText("Enter what you would like to name the gif file:");
+     int sign = input.exec();
+     QByteArray byteArray = input.textValue().toLocal8Bit();
+
+     if(sign != QDialog::Rejected) {
+         emit exportGifSignal(byteArray.data());
+     }
+
+
 }
