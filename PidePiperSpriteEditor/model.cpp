@@ -99,7 +99,8 @@ void Model::retrieveFrameNumberFromClickedPreview(int frameNumber)
 /// Slot called as soon as the user clicks on the drawing window
 /// Saves the pixmap before the user draws on the window
 ///
-void Model::saveCurrentFrame(QPixmap* map){
+void Model::saveCurrentFrame(QPixmap* map)
+{
     framesVector[currentFrame]->currentMap = new QPixmap(*map);
 }
 
@@ -125,18 +126,15 @@ void Model::saveAs()
                 for(int j = 0; j < pixmapSize; j++)
                 {
                     QRgb pixelColor = currentImage.pixel(static_cast<int>(i*800/pixmapSize+10), static_cast<int>(j*800/pixmapSize+10));
-                    //QColor color(pixelColor);
                     saveVector.push_back(qRed(pixelColor));
                     saveVector.push_back(qGreen(pixelColor));
                     saveVector.push_back(qBlue(pixelColor));
-                    saveVector.push_back(qAlpha(pixelColor)); //delete dis
-                    //saveVector.push_back(10);
+                    saveVector.push_back(qAlpha(pixelColor));
                 }
                 saveVector.push_back(-1);
             }
     }
     emit sendSaveVector(saveVector);
-   // createNewFrame();
 }
 
 ///
@@ -156,15 +154,11 @@ void Model::openSprite(QQueue<int>* frameQueue, int numOfPixels, int numOfFrames
 {
     resetAll();
     emit resetFrameCountFromOpen();
-    //numOfPixels = frameQueue->dequeue();
-    //frameQueue->dequeue();
     emit enableButtonsFromLoad(numOfPixels);
-   //  int numOfFrames = frameQueue->dequeue();
     for(int i = 0; i < numOfFrames; i++)
     {
         Frame* newFrame = new Frame();
         framesVector.push_back(newFrame);
-       // QQueue<int>* newFrameQueue = frameQueue;
         emit openFrame(frameQueue, numOfPixels);
     }
     emit setDefaultColorOnOpen();
@@ -192,6 +186,7 @@ void Model::duplicateFrame()
     updateCurrentFrameCounter();
     emit duplicatedFrameAdded(newPixmap);
 }
+
 
 void Model::addPixmapFromLoad(QPixmap* newPixmap)
 {

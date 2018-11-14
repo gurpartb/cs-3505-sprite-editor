@@ -43,7 +43,6 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(model, &Model::frameAdded, ui->drawingWindowLabel, &DrawingWindow::frameAdded);
     connect(ui->drawingWindowLabel, &DrawingWindow::enableUiSignal, this, &MainWindow::enableUi);
 
-
     //Frame Preview Class Connections:
     connect(this, &MainWindow::sendFrameNumberToModel, model, &Model::retrieveFrameNumberFromClickedPreview);
     connect(model, &Model::displaySelectedFrameFromPreview, ui->drawingWindowLabel, &DrawingWindow::displaySelectedFrameFromPreview);
@@ -57,7 +56,7 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(this, &MainWindow::sizeChosen, model, &Model::storeNumberOfPixels);
     ui->fileSaveAs->setDisabled(true);
 
-     //Open Connections
+    //Open Connections
     connect(this, &MainWindow::openSprite, model, &Model::openSprite);
     connect(model, &Model::resetFrameCountFromOpen, ui->drawingWindowLabel, &DrawingWindow::resetFrameCountFromOpen);
     connect(model, &Model::openFrame, ui->drawingWindowLabel, &DrawingWindow::openingFrame);
@@ -66,14 +65,16 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(model, &Model::enableButtonsFromLoad, ui->drawingWindowLabel, &DrawingWindow::initializeLabelFromLoad);
     connect(ui->drawingWindowLabel, &DrawingWindow::addPixmapToFrameFromLoad, model, &Model::addPixmapFromLoad);
 
-     //Duplicate Connections
+    //Duplicate Connections
     connect(ui->duplicateButton, &QPushButton::pressed, model, &Model::duplicateFrame);
     connect(model, &Model::duplicatedFrameAdded, ui->drawingWindowLabel, &DrawingWindow::duplicatedFrame);
     connect(ui->drawingWindowLabel, &DrawingWindow::addFrameToPreviewOfFrames, this, &MainWindow::addFrameToUi);
 
+    //Draw connection
+    connect(ui->drawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsDraw);
+
     //Mirror Pixel Connections
     connect(ui->mirrorDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsMirrorDrawing);
-
 
     // Rectangle connection
     connect(ui->rectangleDrawButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsRectangleDrawing);
@@ -89,7 +90,6 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     connect(fpsTimer, SIGNAL(timeout()), this, SLOT(getAnimationFrame()));
     connect(model, SIGNAL(sendFrameToAnimationPlayer(QPixmap*)), this, SLOT(playAnimation(QPixmap*)));
     connect(this, SIGNAL(retrieveAnimationFrameSignal(int)), model, SLOT(retrieveFrameForPlayingAnimation(int)));
-
 
     //Delete Frame Button
     connect(ui->deleteFrameButton, &QPushButton::pressed, model, &Model::deleteRecentFrame);
@@ -196,6 +196,8 @@ void MainWindow::addFrameToUi(QPixmap *pixmap, int frameCount)
     }
 
     PreviewFrame *framePreview = new PreviewFrame(frameCount, pixmap);
+    framePreview->setMaximumHeight(152);
+    framePreview->setMaximumWidth(152);
     connect(framePreview, &PreviewFrame::sendFrameNumber, this, &MainWindow::getFrameNumberToSendToModel);
     previewFrameVector.push_back(framePreview);
 
@@ -303,6 +305,7 @@ void MainWindow::getFrameNumberToSendToModel(int chosenFrameNumber)
 void MainWindow::on_colorSelectButton_clicked()
 {
     QColorDialog colorWindow;
+    colorWindow.setOption(QColorDialog::ShowAlphaChannel);
     colorWindow.exec();
     ui->colorSelectButton->setStyleSheet("background-color: " + colorWindow.selectedColor().name());
     emit changeColor(colorWindow.selectedColor());
@@ -336,21 +339,24 @@ void MainWindow::on_fileSaveAs_triggered()
 ///
 void MainWindow::saveAs(std::vector<int> saveVector)
 {
-    QString fileName = QFileDialog::getSaveFileName(this,
-        tr("Save Sprite"), "",
-        tr("Sprite (*.ssp);;All Files (*)"));
+   // QString fileName = QFileDialog::getSaveFileName(this, tr("Save Sprite"), "", tr("Sprite (*.ssp);;All Files (*)"));
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save Sprite"), "", tr("Sprite (*.ssp)"));
+    if (!fileName.endsWith(".ssp"))
+    {
+        fileName += ".ssp";
+    }
 
     if (fileName.isEmpty())
         return;
-    else {
+    else
+    {
         QFile file(fileName);
-        if (!file.open(QIODevice::WriteOnly)) {
-            QMessageBox::information(this, tr("Unable to open file"),
-                file.errorString());
+        if (!file.open(QIODevice::WriteOnly))
+        {
+            QMessageBox::information(this, tr("Unable to open file"), file.errorString());
             return;
         }
         QTextStream out(&file);
-        //out.setVersion(QDataStream::Qt_4_5);
         for(std::vector<int>::iterator it = saveVector.begin(); it != saveVector.end(); ++it )
         {
             if(*it == -1)

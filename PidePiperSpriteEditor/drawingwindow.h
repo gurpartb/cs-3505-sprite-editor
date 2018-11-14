@@ -30,14 +30,12 @@ signals:
     void addFrameToUi(QPixmap*, int);
     void updateFramePreview(QPixmap*);
     void enableUiSignal(bool);
-    // head
     void addDuplicatedPixmap(QPixmap*);
     void addFrameToPreviewOfFrames(QPixmap*, int);
     void addPixmapToFrameFromLoad(QPixmap*);
     void setColorButtonUI(QRgb);
-    //
     void saveCurrentFrame(QPixmap*);
-    // undo3
+
 public slots:
     void frameAdded();
     void undo(QPixmap*);
@@ -50,6 +48,7 @@ public slots:
     void setIsMirrorDrawing();
     void setIsRectangleDrawing();
     void removeFrame();
+    void setIsDraw();
     void setIsColorDropper();
     void setIsEraser();
     void setDefaultColorOnOpen();
@@ -60,6 +59,7 @@ private:
     void mouseReleaseEvent(QMouseEvent *event);
 
     //void findPixelRatio(double currentX, double currentY);
+    void setButtonsToFalse();
     void drawPixel(QPoint pos);
     void drawRectangle(QPoint currentPoint);
     QRectF getCurrentPixel(QPoint pos);
@@ -72,7 +72,6 @@ private:
     // void drawPixelFromLoad(QColor);
     QPixmap *pixMap;
 
-    bool currentlyDrawing;
     int pixelSize; //This is a field for the size of the window.
     int frameCount;
     int currentFrameSelected;
@@ -81,6 +80,8 @@ private:
 
     QColor color;
     QPoint clickedPoint;
+
+    bool currentlyDrawing;
     bool isMirrorDrawing;
     bool isRectangleDrawing;
     bool isColorDropper;

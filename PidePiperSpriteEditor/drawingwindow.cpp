@@ -12,9 +12,10 @@ DrawingWindow::DrawingWindow(QWidget* parent) : QLabel(parent)
     pixMap = new QPixmap(800, 800);
     pixMap->fill(Qt::transparent);
     setPixmap(*pixMap);
-    isMirrorDrawing = false;
-    isRectangleDrawing = false;
-    isColorDropper = false;
+//    isMirrorDrawing = false;
+//    isRectangleDrawing = false;
+//    isColorDropper = false;
+    setIsDraw();
 }
 
 DrawingWindow::~DrawingWindow()
@@ -171,6 +172,9 @@ void DrawingWindow::drawPixel(QPoint pos){
     painterPath.addRect(pixel);
     if(isMirrorDrawing)
         painterPath.addRect(pixelMirror);
+    if(isEraser){
+        painter.setCompositionMode(QPainter::CompositionMode_Clear);
+    }
     painter.fillPath(painterPath, color);
     painter.drawPath(painterPath);
     this->setPixmap(*pixMap);
@@ -203,21 +207,38 @@ void DrawingWindow::drawRectangle(QPoint pos){
     }
 }
 
+void DrawingWindow::setButtonsToFalse(){
+    isMirrorDrawing = false;
+    isRectangleDrawing = false;
+    isColorDropper = false;
+    isEraser = false;
+}
+
 void DrawingWindow::setIsMirrorDrawing()
 {
-    isMirrorDrawing = !isMirrorDrawing;
+    setButtonsToFalse();
+    isMirrorDrawing = true;
 }
 
 void DrawingWindow::setIsRectangleDrawing(){
-    isRectangleDrawing = !isRectangleDrawing;
+    setButtonsToFalse();
+    isRectangleDrawing = true;
 }
 
 void DrawingWindow::setIsColorDropper(){
-    isColorDropper = !isColorDropper;
+    setButtonsToFalse();
+    isColorDropper = true;
 }
 
 void DrawingWindow::setIsEraser(){
-    color = Qt::white;
+   // color = Qt:green;
+    setButtonsToFalse();
+    isEraser = true;
+}
+
+void DrawingWindow::setIsDraw(){
+    setButtonsToFalse();
+    currentlyDrawing = true;
 }
 
 ///
@@ -326,4 +347,5 @@ void DrawingWindow::duplicatedFrame(QPixmap* newPixmap){
 void DrawingWindow::setDefaultColorOnOpen()
 {
     color = Qt::black;
+    emit setColorButtonUI(Qt::black);
 }
