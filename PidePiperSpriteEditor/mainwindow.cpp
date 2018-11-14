@@ -15,6 +15,8 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     ui->setupUi(this);
     ui->scrollArea->setWidgetResizable(true);
 
+    setWindowIcon(QIcon(":/pplogo.jpg"));
+
     //Disable Ui until user sets size.
     enableUi(false);
 
@@ -126,6 +128,10 @@ void MainWindow::enableUi(bool enabled)
     ui->deleteFrameButton->setEnabled(enabled);
     ui->rectangleDrawButton->setEnabled(enabled);
     ui->deleteFrameButton->setEnabled(enabled);
+    if (enabled == true)
+    {
+        ui->drawingWindowLabel->setStyleSheet("background-color:white; border: 1px solid black;");
+    }
 
     //activates the animation on start
     if(enabled)
@@ -287,6 +293,7 @@ void MainWindow::playAnimation(QPixmap * pixmap)
     const QPixmap pixmapInstance = *pixmap;
 
     ui->fpsPreviewLabel->setPixmap(pixmapInstance.scaled(150, 150));
+
 }
 
 ///

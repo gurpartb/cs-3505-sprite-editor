@@ -11,7 +11,14 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Pied Pipers Sprite Editor</string>
+  </property>
+  <property name="windowIcon">
+   <iconset theme="url(:/Logo.png)"/>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: 	#D3D3D3
+</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -37,8 +44,12 @@
           <height>55</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">border-image: url(:/pen.png) 0 0 0 0 stretch stretch;
+background-color: green;</string>
+        </property>
         <property name="text">
-         <string>Draw</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -62,8 +73,12 @@
           <height>55</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">border-image: url(:/eraser.png) 0 0 0 0 stretch stretch;
+background-color:green;</string>
+        </property>
         <property name="text">
-         <string>Eraser</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -87,8 +102,12 @@
           <height>55</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">border-image: url(:/rectangle.png) 0 0 0 0 stretch stretch;
+background-color:green;</string>
+        </property>
         <property name="text">
-         <string>RectBtn</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -112,8 +131,12 @@
           <height>55</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">border-image: url(:/mirror.png) 0 0 0 0 stretch stretch;
+background-color:green;</string>
+        </property>
         <property name="text">
-         <string>Mirror Tool</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -137,8 +160,12 @@
           <height>55</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">border-image: url(:/dropper.png) 0 0 0 0 stretch stretch;
+background-color:green;</string>
+        </property>
         <property name="text">
-         <string>Dropper</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -190,8 +217,12 @@
           <height>55</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">border-image: url(:/addframe.png) 0 0 0 0 stretch stretch;
+background-color:green;</string>
+        </property>
         <property name="text">
-         <string>Add Frame</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -215,8 +246,12 @@
           <height>55</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">border-image: url(:/duplicate.png) 0 0 0 0 stretch stretch;
+background-color:green;</string>
+        </property>
         <property name="text">
-         <string>Duplicate</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -240,8 +275,12 @@
           <height>55</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">border-image: url(:/undo.png) 0 0 0 0 stretch stretch;
+background-color:green;</string>
+        </property>
         <property name="text">
-         <string>Undo</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -278,8 +317,12 @@
           <height>55</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">border-image: url(:/trash.png) 0 0 0 0 stretch stretch;
+background-color:green;</string>
+        </property>
         <property name="text">
-         <string>DelFrm</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -330,10 +373,11 @@
       </property>
       <property name="styleSheet">
        <string notr="true">border: 1px solid black;
-background-color: rgb(255, 255, 255);</string>
+background-color: rgb(255, 255, 255);
+border-image: url(:/mainscreen.png) 0 0 0 0 stretch stretch;</string>
       </property>
       <property name="text">
-       <string>Please create a new project, or open an existing project.</string>
+       <string/>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -359,15 +403,18 @@ background-color: rgb(255, 255, 255);</string>
           <height>200</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
         <property name="text">
-         <string>Animation</string>
+         <string/>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="fpsCountLabel">
         <property name="text">
-         <string>TextLabel</string>
+         <string>FPS</string>
         </property>
        </widget>
       </item>
@@ -482,7 +529,6 @@ background-color: rgb(255, 255, 255);</string>
     <addaction name="fileSaveAs"/>
     <addaction name="fileLoadSprite"/>
     <addaction name="fileExportGif"/>
-    <addaction name="filePreviewGif"/>
     <addaction name="fileClose"/>
    </widget>
    <addaction name="menuFile"/>
