@@ -31,6 +31,8 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
     //DrawingWindow and Model connections
     connect(ui->drawingWindowLabel, &DrawingWindow::updatePixmap, model, &Model::currentFrameUpdatePixmap);
     connect(ui->drawingWindowLabel, &DrawingWindow::createdInitialFrame, model, &Model::createNewFrame);
+    connect(ui->drawingWindowLabel, &DrawingWindow::saveCurrentFrame, model, &Model::saveCurrentFrame);
+    connect(model, &Model::setDefaultColorOnOpen, ui->drawingWindowLabel, &DrawingWindow::setDefaultColorOnOpen);
 
     //UI to Model connections
     connect(ui->addFrameButton, &QPushButton::pressed, model, &Model::updateCurrentFrameCounter);
@@ -80,6 +82,9 @@ MainWindow::MainWindow(Model *model, QWidget *parent) : QMainWindow(parent), ui(
      connect(ui->colorDropButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsColorDropper);
      connect(ui->drawingWindowLabel, &DrawingWindow::setColorButtonUI, this, &MainWindow::setColorButton);
 
+     // Eraser connection
+     connect(ui->eraseButton, &QPushButton::pressed, ui->drawingWindowLabel, &DrawingWindow::setIsEraser);
+
     fpsTimer = new QTimer(this);
     connect(fpsTimer, SIGNAL(timeout()), this, SLOT(getAnimationFrame()));
     connect(model, SIGNAL(sendFrameToAnimationPlayer(QPixmap*)), this, SLOT(playAnimation(QPixmap*)));
@@ -119,6 +124,14 @@ void MainWindow::enableUi(bool enabled)
     ui->fileSaveAs->setEnabled(enabled);
     ui->rectangleDrawButton->setEnabled(enabled);
     ui->deleteFrameButton->setEnabled(enabled);
+    ui->rectangleDrawButton->setEnabled(enabled);
+    ui->deleteFrameButton->setEnabled(enabled);
+
+    //activates the animation on start
+    if(enabled)
+    {
+        ui->fpsSlider->setValue(1);
+    }
 }
 
 ///
@@ -195,6 +208,7 @@ void MainWindow::addFrameToUi(QPixmap *pixmap, int frameCount)
     ui->animationSlider->blockSignals(true);
     ui->animationSlider->setValue(static_cast<int> (previewFrameVector.size() - 1));
     ui->animationSlider->blockSignals(false);
+    ui->scrollArea->repaint(); //Update scroll area (this fixed a bug on a load file)
 }
 ///
 /// \brief MainWindow::deleteRecentPreviewFrame:
@@ -339,7 +353,7 @@ void MainWindow::saveAs(std::vector<int> saveVector)
         //out.setVersion(QDataStream::Qt_4_5);
         for(std::vector<int>::iterator it = saveVector.begin(); it != saveVector.end(); ++it )
         {
-            if(*it == 10)
+            if(*it == -1)
             {
                 out<<endl;
                 continue;
@@ -355,25 +369,38 @@ void MainWindow::saveAs(std::vector<int> saveVector)
 ///
 void MainWindow::on_fileLoadSprite_triggered()
 {
-    previewFrameVector.clear(); // memery leaks
+    ui->fpsSlider->setValue(0);
+    resetFramePreview();
     QQueue<int>* openQueue = new QQueue<int>;
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Open Sprite"), "",
         tr("Sprite (*.ssp);;All Files (*)"));
+    int numOfPixels, numOfFrames;
 
     if (fileName.isEmpty())
+    {
            return;
-       else {
+    }
+    else
+    {
 
            QFile file(fileName);
 
-           if (!file.open(QIODevice::ReadOnly)) {
+           if (!file.open(QIODevice::ReadOnly))
+           {
                QMessageBox::information(this, tr("Unable to open file"),
                    file.errorString());
                return;
            }
 
            QTextStream in(&file);
+           QString line1 = in.readLine();
+           QStringList sizes = line1.split(" ");
+           numOfPixels = sizes[0].toInt();
+
+           QString line2 = in.readLine();
+           QStringList frames = line2.split(" ");
+           numOfFrames = frames[0].toInt();
            QString content = in.readAll();
            QStringList data = content.split(" ");
            for(const auto& i : data)
@@ -381,7 +408,7 @@ void MainWindow::on_fileLoadSprite_triggered()
                openQueue->enqueue(i.toInt());
            }
        }
-    emit openSprite(openQueue);
+    emit openSprite(openQueue,numOfPixels,numOfFrames);
 }
 
 void MainWindow::on_mirrorDrawButton_clicked()

@@ -12,12 +12,14 @@ public:
     //Fields
     std::vector<QPixmap*> pixmapVector;
 
+public:
     Frame();
     void addPixmapFromLoad(QPixmap* pixmap);
     void addNewPixmap(QPixmap *pixmap);
     QPixmap* undo();
     QPixmap* getPixmap();
     QPixmap* duplicate();
+    QPixmap *currentMap;
 };
 
 #endif // FRAME_H

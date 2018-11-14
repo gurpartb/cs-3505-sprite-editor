@@ -24,14 +24,14 @@ public slots:
     void retrieveFrameNumberFromClickedPreview(int);
     void saveAs();
     void storeNumberOfPixels(int);
-    void openSprite(QQueue<int>*);
+    void openSprite(QQueue<int>*, int numOfPixels, int numOfFrames);
     void addPixmapFromDuplication(QPixmap*);
     void duplicateFrame();
     void addPixmapFromLoad(QPixmap*);
     void retrieveFrameForPlayingAnimation(int);
     void deleteRecentFrame();
     void exportGifFromFrames(const char*);
-
+    void saveCurrentFrame(QPixmap*);
 
 signals:
     void frameAdded();
@@ -44,6 +44,7 @@ signals:
     void enableButtonsFromLoad(int);
     void sendFrameToAnimationPlayer(QPixmap*);
     void deletePreviewFrame();
+    void setDefaultColorOnOpen();
 
 private:
     unsigned int currentFrame;

@@ -42,6 +42,7 @@ void DrawingWindow::userChoseSize(int size)
     pixMap->fill(Qt::transparent);
     this->setPixmap(*pixMap);
     emit createdInitialFrame();
+    //emit saveCurrentFrame(pixMap);
     std::cout << "Chose size: " << size << std::endl;
     pixelSize = windowSize / size;
     sizeHasBeenChosen = true;
@@ -59,6 +60,7 @@ void DrawingWindow::frameAdded()
     currentFrameSelected = frameCount;
     emit addFrameToUi(pixMap, frameCount);
     emit updatePixmap(pixMap);
+    emit saveCurrentFrame(pixMap);
 }
 
 void DrawingWindow::setColor(QColor givenColor)
@@ -76,8 +78,8 @@ void DrawingWindow::mousePressEvent(QMouseEvent* event)
 {
     if (event->buttons() &Qt::LeftButton && sizeHasBeenChosen)
     {
-        //QPoint point(event->pos());
         clickedPoint = event->pos();
+        emit updatePixmap(pixMap);//save the last instance of the map for undo
         currentlyDrawing = true;
     }
 }
@@ -119,7 +121,9 @@ void DrawingWindow::mouseReleaseEvent(QMouseEvent *event)
         }else{
             drawPixel(event->pos());
         }
-        emit updatePixmap(pixMap);
+        //emit updatePixmap(pixMap);
+
+        emit saveCurrentFrame(pixMap);//saves the current frame being displayed after drawing
         emit updateFramePreview(pixMap);
         currentlyDrawing = false;
     }
@@ -212,12 +216,21 @@ void DrawingWindow::setIsColorDropper(){
     isColorDropper = !isColorDropper;
 }
 
+void DrawingWindow::setIsEraser(){
+    color = Qt::white;
+}
 
+///
+/// \brief DrawingWindow::undo
+/// \param map Last map from the current frame
+/// Slot received from the model class
+/// displays the pixmap received from the model
+///
 void DrawingWindow::undo(QPixmap* map)
 {
     if(map == nullptr){
-        std::cout <<"Nothing left to undo" << '\n';
-        return;
+
+        return;//TODO: deletes current frame and moves back one frame
     }
     pixMap = new QPixmap(*map);
     this->setPixmap(*pixMap);
@@ -233,7 +246,7 @@ void DrawingWindow::displaySelectedFrameFromPreview(QPixmap *framePreviewPixmap,
 {
     currentFrameSelected = frameSelected;
     std::cout << "DrawingWindow(displaySelected) - Updating main Pixmap from frame preview: " << currentFrameSelected << std::endl;
-    *this->pixMap = *framePreviewPixmap;
+    *this->pixMap = framePreviewPixmap->copy();
     this->setPixmap(*pixMap);
 }
 
@@ -251,7 +264,7 @@ void DrawingWindow::resetFrameCount()
 ///
 void DrawingWindow::resetFrameCountFromOpen()
 {
-    frameCount = 0;
+    frameCount = -1;
 }
 ///
 ///
@@ -278,18 +291,19 @@ void DrawingWindow::openingFrame(QQueue<int>* frameQueue, int pixmapSize)
             int blue = frameQueue->dequeue();
             int alpha = frameQueue->dequeue();
             QColor loadColor(red, green, blue, alpha);
-            QPoint loadPoint(j*windowSize/pixmapSize, i*windowSize/pixmapSize);
+            QPoint loadPoint(i*windowSize/pixmapSize,j*windowSize/pixmapSize);
             color = loadColor;
             isMirrorDrawing = false;
+            sizeHasBeenChosen = true;
             drawPixel(loadPoint);
         }
     }
+    frameCount++;
     setPixmap(*pixMap);
     QPixmap* newPixmap = new QPixmap(*pixMap);
     displaySelectedFrameFromPreview(newPixmap, frameCount);
     emit addPixmapToFrameFromLoad(newPixmap);
     emit addFrameToPreviewOfFrames(newPixmap, frameCount);
-    frameCount++;
 }
 
 ///
@@ -301,4 +315,15 @@ void DrawingWindow::duplicatedFrame(QPixmap* newPixmap){
     setPixmap(*newPixmap);
     displaySelectedFrameFromPreview(newPixmap, frameCount);
     emit addFrameToPreviewOfFrames(newPixmap, frameCount);
+    emit saveCurrentFrame(newPixmap);
+
+}
+
+///
+/// \brief DrawingWindow::setDefaultColorOnOpen:
+/// Sets the default color back to black on opening a file.
+///
+void DrawingWindow::setDefaultColorOnOpen()
+{
+    color = Qt::black;
 }
